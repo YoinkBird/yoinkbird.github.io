@@ -1,6 +1,6 @@
 
 from sklearn.ensemble import RandomForestClassifier
-from sklearn import (metrics, model_selection, linear_model, preprocessing, ensemble, neighbors)
+from sklearn import (metrics, model_selection, linear_model, preprocessing, ensemble, neighbors, decomposition)
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 import seaborn as sns
@@ -135,6 +135,11 @@ pp.pprint(list(data_dummies))
  'Dusk',
  'Unknown',
 '''
+
+# pca stub
+# pca = decomposition.PCA(svd_solver='full')
+# pca.fit(pd.get_dummies(data[dummies_needed_list])).transform(pd.get_dummies(data[dummies_needed_list]))
+
 
 '''
 pandas tricks
