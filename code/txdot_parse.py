@@ -15,10 +15,10 @@ data = pd.read_csv("../data/txdot_2015.csv",header=7)
 
 print(list(data.columns))
 # preprocessing
-# lowercase: http://stackoverflow.com/a/38931854
-data.columns = data.columns.str.lower()
-# remove spaces
-data.columns = data.columns.str.replace(' ', '_')
+# remove punctuation, then lowercase (src: http://stackoverflow.com/a/38931854)
+def process_cols(df):
+  return df.columns.str.replace('[,\s()]+','_').str.lower()
+data.columns = process_cols(data)
 # special cases
 data.columns = data.columns.str.replace('crash_i_d', 'crash_id')
 # process categorical data
@@ -106,10 +106,13 @@ if(0):
 datapt = data.pivot_table(values=['crash_death_count','crash_incapacitating_injury_count','crash_non-incapacitating_injury_count'], index=['speed_limit','crash_time'])
 print(datapt)
 
-pp.pprint(list(pd.get_dummies(data[dummies_needed_list]).columns))
-pp.pprint(list(pd.get_dummies(data[dummies_needed_list]).columns.str.replace('[,\s]+','_').str.lower()))
+# dummies
 # http://stackoverflow.com/a/36285489 - use of columns=
-pp.pprint(list(pd.get_dummies(data, columns=dummies_needed_list).columns.str.replace('[,\s]+','_').str.lower()))
+data_dummies = pd.get_dummies(data, columns=dummies_needed_list)#.columns.str.replace('[,\s]+','_').str.lower()
+data_dummies.columns = process_cols(data_dummies)
+pp.pprint(list(data_dummies))
+
+# stub for replacing the lighting values
 '''
  'Dark, Lighted', 'dark_lighted_yes'
  'Dark, Not Lighted', 'dark_lighted_no'
