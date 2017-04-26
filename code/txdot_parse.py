@@ -14,6 +14,11 @@ import re
 data = pd.read_csv("../data/txdot_2015.csv",header=7)
 
 print(list(data.columns))
+# try something interesting - track the "categories" of columns
+colgrps = {
+    # relevant info for about intersections
+    'intersection' : ['street_name','intersecting_street_name','intersection_related'],
+  }
 # preprocessing
 # remove punctuation, then lowercase (src: http://stackoverflow.com/a/38931854)
 def process_cols(df):
@@ -21,6 +26,14 @@ def process_cols(df):
 data.columns = process_cols(data)
 # special cases
 data.columns = data.columns.str.replace('crash_i_d', 'crash_id')
+# convert to 24h time
+data.crash_time = data.crash_time.apply(lambda x: str(x).zfill(4)) # leading zeros
+# could convert to datetime, but this forces a year,month,day to be present
+# pd.to_datetime(data.crash_time.apply(lambda x: "2015%s"%x),format="%Y%H%M") # http://strftime.org/
+# data.apply(lambda x: "%s%s" % (x.crash_year,x.crash_time), axis=1) # flexible year
+# data['datetime'] = pd.to_datetime(data.crash_time.apply(lambda x: "2015%s"%x),format="%Y%H%M")
+# src: http://stackoverflow.com/a/32375581
+# pd.to_datetime(data.crash_time.apply(lambda x: "2015%s"%x),format="%Y%H%M").dt.time
 # process categorical data
 if(1):
     # replace ['No Data','Not Applicable'] with NaN
@@ -123,3 +136,18 @@ pp.pprint(list(data_dummies))
  'Unknown',
 '''
 
+'''
+pandas tricks
+filtering
+http://stackoverflow.com/a/11872393
+# select data with average_daily_traffic_amount but intersecting_street_name null
+# => busy roads without an intersection
+data[~data['average_daily_traffic_amount'].isnull() & data['intersecting_street_name'].isnull()]
+
+# select intersection_related == 'Non Intersection' and intersecting_street_name null
+# => verify whether intersecting_street_name==null indicates that there is no intersection
+# => then only display the columns pertaining to street names
+data[(data['intersection_related'] == 'Non Intersection') & data['intersecting_street_name'].isnull()][['street_name','intersecting_street_name','intersection_related']]
+
+data[(data['intersection_related'] == 'Non Intersection') & data['intersecting_street_name'].isnull()][colgrps['intersection']]
+'''
