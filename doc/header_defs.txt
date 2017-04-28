@@ -1,0 +1,12 @@
+Fatal Crash
+ definition: Any injury crash that results in one or more fatal injuries.
+Fatal Injury (Fatality)
+ definition: Any injury sustained in a motor vehicle traffic crash that results in death within thirty days of the motor vehicle traffic crash.
+Incapacitating Injury
+ definition: Any injury, other than a fatal injury, which prevents the injured person from walking, driving or normally continuing the activities he was capable of performing before the injury occurred.
+Non-Incapacitating Injury
+ definition: Any injury, other than a fatal or an incapacitating injury, which is evident to observers at the scene of the crash in which the injury occurred.
+Non-Injury Crash
+ definition: Any motor vehicle crash other than an injury crash. A non-injury crash is also called a property damage only crash.
+Possible Injury
+ definition: Any injury reported or claimed which is not a fatal, incapacitating or nonincapacitating injury.

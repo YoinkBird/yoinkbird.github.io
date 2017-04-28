@@ -1,0 +1,77 @@
+_source
+ definition: http://ftp.dot.state.tx.us/pub/txdot-info/trf/crash_statistics/definitions.pdf
+BAC
+ definition: Blood Alcohol Concentration.
+Crash Rate
+ definition: The number of crashes per 100,000,000 vehicle miles traveled.
+Driving Under the Influence (DUI)
+ definition: Driver BAC Result > 0.00 or Contributing Factor of “Had Been Drinking” or “Under the Influence of Alcohol”. This only includes alcohol involvement, not drugs.
+Fatal Crash
+ definition: Any injury crash that results in one or more fatal injuries.
+Fatal Injury (Fatality)
+ definition: Any injury sustained in a motor vehicle traffic crash that results in death within thirty days of the motor vehicle traffic crash.
+Fatality Rate
+ definition: The number of fatalities per 100,000,000 vehicle miles traveled.
+First Harmful Event
+ definition: The first injury or damage producing event of the crash.
+Head-On Crash
+ definition: A crash involving two vehicles traveling in opposite directions prior to impact.
+In Transport
+ definition: Denotes the state or condition of a motor vehicle, which is in motion or within the portion of a way ordinarily used for travel by similar vehicles.
+ When applied to motor vehicles, in transport means in motion or on a roadway.
+Incapacitating Crash
+ definition: A crash in which the most severe injury sustained was an incapacitating injury.
+Incapacitating Injury
+ definition: Any injury, other than a fatal injury, which prevents the injured person from walking, driving or normally continuing the activities he was capable of performing before the injury occurred.
+Intersection 
+ definition: The area embraced within the prolongation of connection of the lateral curb lines, or, if none, then the lateral boundary lines of the roadways of two roadways which join one another at, or approximately at, right angles or the area within which vehicles traveling upon different roadways joining at any other angle may come in conflict.
+Intersection Related Crash
+ definition: is a traffic crash in which the first harmful event (1) occurs on an approach to or exit from an intersection and (2) results from an activity, behavior or control related to the movement of traffic units through the intersection.
+Motor Vehicle
+ definition: Every vehicle that is self-propelled and every vehicle which is propelled by electric power obtained by overhead trolley wires, but not operated upon rails. 
+Motor Vehicle Crash
+ definition: A crash involving a motor vehicle in transport, but not involving aircraft or watercraft.
+Motor Vehicle Traffic Crash
+ definition: Any motor vehicle crash that occurs on a trafficway or after the motor vehicle runs off the roadway but before events are stabilized.
+No Data
+ definition: The reporting peace officer did not report the information (blank).
+Non-Incapacitating Crash
+ definition: A crash in which the most severe injury sustained was a nonincapacitating injury.
+Non-Incapacitating Injury
+ definition: Any injury, other than a fatal or an incapacitating injury, which is evident to observers at the scene of the crash in which the injury occurred.
+Non-Injury Crash
+ definition: Any motor vehicle crash other than an injury crash. A non-injury crash is also called a property damage only crash.
+Other Injury
+ definition: Any injury classified as a possible injury severity.
+Other Injury Crash
+ definition: A crash in which the most severe injury sustained was a possible injury.
+Possible Injury
+ definition: Any injury reported or claimed which is not a fatal, incapacitating or nonincapacitating injury.
+Possible Injury Crash
+ definition: A crash in which the most severe injury sustained was a possible injury.
+Reportable Motor Vehicle Crash
+ definition: Any crash involving a motor vehicle in transport that occurs or originates on a traffic way, results in injury to or death of any person, or damage to the property of any one person to the apparent extent of $1,000.
+Roadway
+ definition: The portion of a trafficway designed, improved, and ordinarily used for motor vehicle travel or, where various classes of motor vehicles are segregated, that part of a trafficway used by a particular class.
+Run-Off Road Crash
+ definition: A single motor vehicle crash where the impact of the first harmful event occurred on the shoulder or beyond the shoulder of the roadway.
+Rural
+ definition: Location that can not be classified as urban.
+Serious Injury
+ definition: An incapacitating or non-incapacitating injury.
+Serious Injury Crash
+ definition: A crash in which the most severe injury sustained was an incapacitating injury or a non-incapacitating injury. 
+Trafficway
+ definition: Any land way open to the public as a matter of right or custom for moving persons or property from one place to another.
+Unit
+ definition: Refers to entities involved in the crash. Includes: Motor Vehicle, Train, Pedalcyclist, Pedestrian, Motorized Conveyance, Towed, Non-Contact and Other.
+Unknown
+ definition: The reporting peace officer indicated that the information was unknown at the scene of the
+crash.
+Unknown Severity Crash
+ definition: Any motor vehicle crash in which the reporting peace officer did not provide injury severity information for any of the people involved in the crash.
+Urban
+ definition: Location within the limits of a city or town having a population of 5,000 or more.
+Vehicle Miles Traveled (VMT)
+ definition: The measurement of the total miles traveled by all vehicles in a
+specified area during a specified time. 
