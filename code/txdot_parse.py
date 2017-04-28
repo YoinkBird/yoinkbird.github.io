@@ -169,6 +169,34 @@ if(1):
 else:
   print("-I-: Skipping...")
 
+pairplot_bin_var_list = [
+# 'crash_id',
+## 'average_daily_traffic_amount',
+## 'average_daily_traffic_year',
+ 'crash_death_count',
+# 'crash_incapacitating_injury_count',
+# 'crash_non-incapacitating_injury_count',
+# 'crash_not_injured_count',
+# 'crash_possible_injury_count',
+ 'bin_crash_severity',
+ 'crash_time',
+ 'crash_year',
+## 'day_of_week',
+# 'intersecting_street_name',
+ 'bin_intersection_related',
+# 'latitude',
+ 'bin_light_condition',
+# 'longitude',
+ 'bin_manner_of_collision',
+## 'medical_advisory_flag',
+### 'number_of_entering_roads',
+### 'number_of_lanes',
+# 'object_struck',
+## 'road_base_type',
+ 'speed_limit',
+# 'street_name',
+## 'surface_condition'
+ ]
 pairplot_var_list = [
 # 'crash_id',
  'average_daily_traffic_amount',
