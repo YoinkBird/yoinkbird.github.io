@@ -11,9 +11,10 @@ import re
 #import xgboost as xgb
 
 # import the "crash" data
-data = pd.read_csv("../data/txdot_2015.csv",header=7)
-
+datafile = "../data/txdot_2010_2017.csv"
+data = pd.read_csv(datafile,header=7)
 print(list(data.columns))
+
 # try something interesting - track the "categories" of columns
 colgrps = {
     # relevant info for about intersections
@@ -90,8 +91,8 @@ pairplot_var_list = [
 # 'longitude',
  'manner_of_collision',
  'medical_advisory_flag',
- 'number_of_entering_roads',
- 'number_of_lanes',
+### 'number_of_entering_roads',
+### 'number_of_lanes',
 # 'object_struck',
  'road_base_type',
  'speed_limit',
@@ -105,7 +106,7 @@ dummies_needed_list = [
  'intersection_related',
  'light_condition',
  'manner_of_collision',
- 'number_of_entering_roads',
+### 'number_of_entering_roads',
  'road_base_type',
 # 'surface_condition' # factorized
         ]
