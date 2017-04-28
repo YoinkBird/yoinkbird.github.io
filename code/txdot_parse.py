@@ -40,6 +40,7 @@ if(1):
     # replace ['No Data','Not Applicable'] with NaN
     data.replace(to_replace='No Data', value=np.nan, inplace=True)
     data.replace(to_replace='Not Applicable', value=np.nan, inplace=True)
+    data.replace(to_replace='UNKNOWN', value=np.nan, inplace=True) # intersecting_street_name
     # factorizable data
     # convert 'Wet' 'Dry' to '1' '0'
     data['surface_condition'] = data['surface_condition'].factorize()[0]
