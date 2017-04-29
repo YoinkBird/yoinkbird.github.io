@@ -28,7 +28,7 @@ data.columns = process_cols(data)
 # special cases
 data.columns = data.columns.str.replace('crash_i_d', 'crash_id')
 # convert to 24h time
-data.crash_time = data.crash_time.apply(lambda x: str(x).zfill(4)) # leading zeros
+# data.crash_time = data.crash_time.apply(lambda x: str(x).zfill(4)) # leading zeros
 # could convert to datetime, but this forces a year,month,day to be present
 # pd.to_datetime(data.crash_time.apply(lambda x: "2015%s"%x),format="%Y%H%M") # http://strftime.org/
 # data.apply(lambda x: "%s%s" % (x.crash_year,x.crash_time), axis=1) # flexible year
@@ -209,21 +209,21 @@ pairplot_var_list = [
  'crash_severity',
  'crash_time',
  'crash_year',
- 'day_of_week',
+## 'day_of_week',
 # 'intersecting_street_name',
  'intersection_related',
 # 'latitude',
  'light_condition',
 # 'longitude',
  'manner_of_collision',
- 'medical_advisory_flag',
+## 'medical_advisory_flag',
 ### 'number_of_entering_roads',
 ### 'number_of_lanes',
 # 'object_struck',
- 'road_base_type',
+## 'road_base_type',
  'speed_limit',
 # 'street_name',
- 'surface_condition'
+## 'surface_condition'
  ]
 
 dummies_needed_list = [
@@ -283,3 +283,47 @@ data[(data['intersection_related'] == 'Non Intersection') & data['intersecting_s
 
 data[(data['intersection_related'] == 'Non Intersection') & data['intersecting_street_name'].isnull()][colgrps['intersection']]
 '''
+
+print("-I-: train-test split")
+predictors = [
+# 'crash_time',
+ 'bin_intersection_related',
+ 'bin_light_condition',
+ 'bin_manner_of_collision',
+ ]
+responsecls = [
+ 'bin_crash_severity'
+ ]
+testsize = 0.3
+data_nonan = data[ predictors + responsecls ].dropna()
+X_train, X_test, y_train, y_test = model_selection.train_test_split(data_nonan[predictors],data_nonan[responsecls], test_size=testsize)
+
+from sklearn import tree
+clf = tree.DecisionTreeClassifier(max_depth = 5)
+clf.fit(X_train,y_train)
+
+# prediction and scoring
+print("-I-: cross_val_score on train (itself)")
+print(model_selection.cross_val_score(clf, X_train, y_train.values.ravel()))
+y_pred = clf.predict_proba(X_test)
+print("-I-: cross_val_score against test")
+print(model_selection.cross_val_score(clf, X_test, y_test.values.ravel()))
+
+# display tree criteria
+# src: http://scikit-learn.org/stable/modules/tree.html#classification
+from IPython.display import Image
+# pydot plus had to be installed as python -m pip
+# src : http://stackoverflow.com/a/42469100
+import pydotplus
+dot_data = tree.export_graphviz(clf, out_file=None,
+        feature_names=predictors,
+        class_names=['0']+responsecls, # seems to require at least two class names
+        rounded=True,
+        filled=True,
+        # proportion = True,  : bool, optional (default=False) When set to True, change the display of ‘values’ and/or ‘samples’ to be proportions and percentages respectively.
+
+        )
+graph = pydotplus.graph_from_dot_data(dot_data)
+Image(graph.create_png())
+print("-I-: if img doesn't show, run \n Image(pydotplus.graph_from_dot_data(dot_data).create_png())")
+print("-I-: End of File")
