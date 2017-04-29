@@ -27,6 +27,7 @@ def process_cols(df):
 data.columns = process_cols(data)
 # special cases
 data.columns = data.columns.str.replace('crash_i_d', 'crash_id')
+# crash time
 # convert to 24h time
 # data.crash_time = data.crash_time.apply(lambda x: str(x).zfill(4)) # leading zeros
 # could convert to datetime, but this forces a year,month,day to be present
@@ -35,6 +36,30 @@ data.columns = data.columns.str.replace('crash_i_d', 'crash_id')
 # data['datetime'] = pd.to_datetime(data.crash_time.apply(lambda x: "2015%s"%x),format="%Y%H%M")
 # src: http://stackoverflow.com/a/32375581
 # pd.to_datetime(data.crash_time.apply(lambda x: "2015%s"%x),format="%Y%H%M").dt.time
+# final:
+data['crash_datetime'] = pd.to_datetime(data.apply(lambda x: "%s.%04d" % (x.crash_year,x.crash_time), axis=1),format="%Y.%H%M")
+# convert to decimal time
+# src: https://en.wikipedia.org/wiki/Decimal_time#Scientific_decimal_time
+# convert hours to fraction of day (HH/24) and minutes to fraction of day (mm/24*60), then add together
+def time_base10(time):
+    time = pd.tslib.Timestamp(time)
+    dech = time.hour/24; decm = time.minute/(24*60)
+    #print("%s %f %f %f" % (time.time(), dech, decm, dech+decm))
+    return dech+decm
+# testing - visual inspection
+if(1):
+    print("%s: %f == %f ?" % ("0:00"  , 0.0 , time_base10(pd.tslib.Timestamp("0:00"))))
+    print("%s: %f == %f ?" % ("4:48"  , 0.2 , time_base10(pd.tslib.Timestamp("4:48"))))
+    print("%s: %f == %f ?" % ("7:12"  , 0.3 , time_base10(pd.tslib.Timestamp("7:12"))))
+    print("%s: %f == %f ?" % ("21:36" , 0.9 , time_base10(pd.tslib.Timestamp("21:36"))))
+    print("%s: %f == %f ?" % ("23:56" , 0.99 , time_base10(pd.tslib.Timestamp("23:59"))))
+    #print("%s: %f == %f ?" % ("24:00" , 1.0 , time_base10(pd.tslib.Timestamp("24:00"))))
+
+data['crash_time_dec'] = data.crash_datetime.apply(time_base10)
+# todo: figure out how to hist() with grouping by year, then group by time within each year
+# data.crash_time_dec.hist(bins=48)
+# if(showplt): 
+#   plt.show()
 # process categorical data
 if(1):
     # replace ['No Data','Not Applicable'] with NaN
@@ -287,6 +312,7 @@ data[(data['intersection_related'] == 'Non Intersection') & data['intersecting_s
 print("-I-: train-test split")
 predictors = [
 # 'crash_time',
+# 'crash_time_dec',
  'bin_intersection_related',
  'bin_light_condition',
  'bin_manner_of_collision',
