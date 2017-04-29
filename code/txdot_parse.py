@@ -46,15 +46,29 @@ def time_base10(time):
     dech = time.hour/24; decm = time.minute/(24*60)
     #print("%s %f %f %f" % (time.time(), dech, decm, dech+decm))
     return dech+decm
+def time_base10_to_60(time):
+    hours10 = time * 24  # 0.9 * 24  == 21.6
+    hours24 = int(hours10)  # int(21.6) == 21
+    min60 = round((hours10 * 60) % 60)     # 21.6*60 == 1296; 1296%60 == 36
+    #print("%f %f" % (hours24,min60))
+    return hours24 * 100 + min60
 # testing - visual inspection
 if(1):
+    print("verify correct operation of time_base10")
     print("%s: %f == %f ?" % ("0:00"  , 0.0 , time_base10(pd.tslib.Timestamp("0:00"))))
     print("%s: %f == %f ?" % ("4:48"  , 0.2 , time_base10(pd.tslib.Timestamp("4:48"))))
     print("%s: %f == %f ?" % ("7:12"  , 0.3 , time_base10(pd.tslib.Timestamp("7:12"))))
     print("%s: %f == %f ?" % ("21:36" , 0.9 , time_base10(pd.tslib.Timestamp("21:36"))))
     print("%s: %f == %f ?" % ("23:56" , 0.99 , time_base10(pd.tslib.Timestamp("23:59"))))
     #print("%s: %f == %f ?" % ("24:00" , 1.0 , time_base10(pd.tslib.Timestamp("24:00"))))
+if(1):
+    print("verify correct operation of time_base10_to_60")
+    testtimes1 = [0.0, 0.2, 0.3, 0.9, 0.99]
+    testtimes2 = ["0:00" , "4:48"  , "7:12"  , "21:36" , "23:56"]
+    for i, testtime in enumerate(testtimes1):
+        print("%s: %s == %s ?" % (testtime , testtimes2[i] , time_base10_to_60(testtime)))
 
+# todo: plot by year, then by time.
 data['crash_time_dec'] = data.crash_datetime.apply(time_base10)
 # todo: figure out how to hist() with grouping by year, then group by time within each year
 # data.crash_time_dec.hist(bins=48)
