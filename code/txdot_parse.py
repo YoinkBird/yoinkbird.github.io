@@ -344,3 +344,10 @@ print("-I-: End of File")
 '''
 # look into dictvectorizer dv.get_feature_names http://stackoverflow.com/a/34194521
 '''
+# DOC
+# feature importance and feature selection
+# e.g. reducing complexity of a tree model
+# https://www.analyticsvidhya.com/blog/2016/12/introduction-to-feature-selection-methods-with-an-example-or-how-to-select-the-right-variables/
+# 
+# automatically discarding low-importance features
+# http://scikit-learn.org/stable/modules/feature_selection.html#feature-selection-using-selectfrommodel
