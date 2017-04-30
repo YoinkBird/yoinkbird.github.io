@@ -1,4 +1,5 @@
 
+from helpers import *
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import (metrics, model_selection, linear_model, preprocessing, ensemble, neighbors, decomposition)
 import matplotlib.pyplot as plt
@@ -27,75 +28,9 @@ def process_cols(df):
 data.columns = process_cols(data)
 # special cases
 data.columns = data.columns.str.replace('crash_i_d', 'crash_id')
-# crash time
-# convert to 24h time
-# data.crash_time = data.crash_time.apply(lambda x: str(x).zfill(4)) # leading zeros
-# could convert to datetime, but this forces a year,month,day to be present
-# pd.to_datetime(data.crash_time.apply(lambda x: "2015%s"%x),format="%Y%H%M") # http://strftime.org/
-# data.apply(lambda x: "%s%s" % (x.crash_year,x.crash_time), axis=1) # flexible year
-# data['datetime'] = pd.to_datetime(data.crash_time.apply(lambda x: "2015%s"%x),format="%Y%H%M")
-# src: http://stackoverflow.com/a/32375581
-# pd.to_datetime(data.crash_time.apply(lambda x: "2015%s"%x),format="%Y%H%M").dt.time
-# final:
+# </crash_time>
+# convert integer crashtime to datetime with year
 data['crash_datetime'] = pd.to_datetime(data.apply(lambda x: "%s.%04d" % (x.crash_year,x.crash_time), axis=1),format="%Y.%H%M")
-# convert to decimal time
-# src: https://en.wikipedia.org/wiki/Decimal_time#Scientific_decimal_time
-# convert hours to fraction of day (HH/24) and minutes to fraction of day (mm/24*60), then add together
-def time_base10(time):
-    time = pd.tslib.Timestamp(time)
-    dech = time.hour/24; decm = time.minute/(24*60)
-    #print("%s %f %f %f" % (time.time(), dech, decm, dech+decm))
-    return dech+decm
-def time_base10_to_60(time):
-    hours10 = time * 24  # 0.9 * 24  == 21.6
-    hours24 = int(hours10)  # int(21.6) == 21
-    min60 = round((hours10 * 60) % 60)     # 21.6*60 == 1296; 1296%60 == 36
-    # print("time: %f | hours10 %f | hours24 %f | min60 %f" % (time,hours10,hours24,min60))
-    return hours24 * 100 + min60
-# round to half hour
-def time_round30min(pd_ts_time):
-    import datetime
-    pd_ts_time = pd.tslib.Timestamp(pd_ts_time)
-    newtime = datetime.time()
-    retmin = 61
-    if(pd_ts_time.minute < 16):
-        newtime = datetime.time(pd_ts_time.hour,0)
-        retmin = 00
-    elif((pd_ts_time.minute > 15) & (pd_ts_time.minute < 46)):
-        newtime = datetime.time(pd_ts_time.hour,30)
-        retmin = "30"
-    elif(pd_ts_time.minute > 45):
-        pd_ts_time += datetime.timedelta(hours=1)
-        newtime = datetime.time(pd_ts_time.hour,00)
-        retmin = 00
-    #print("%s %s %f %f" % (pd_ts_time.pd_ts_time(), newtime, newtime.hour, newtime.minute))
-    time_str = "%s.%02d%02d" % (pd_ts_time.year, newtime.hour, newtime.minute)
-    # omit - would have to specify the year
-    # time2 = pd.tslib.Timestamp("%02d:%02d" % (newtime.hour, newtime.minute))
-    if(0):
-        time2 = pd.to_datetime(time_str, format="%Y.%H%M")
-    else:
-        time_str = "%02d%02d" % (newtime.hour, newtime.minute)
-        time2 = int(time_str)
-    return time2
-# testing - visual inspection
-if(1):
-    print("verify correct operation of time_base10")
-    # not testing 24:00 -> 1.0 because "hour must be in 0..23" for dateutil
-    testtimes1 = ["0:00", "4:48"  , "7:12"  , "21:36" , "23:59"     , "0:59"      , "23:00"    ] # "24:00"
-    testtimes2 = [0.0   , 0.2     , 0.3     , 0.9     , 0.999305556 , 0.040972222 , 0.958333333] # 1.0
-    for i, testtime in enumerate(testtimes1):
-        print("%6s: %f == %f ?" % (testtime , testtimes2[i] , time_base10(testtime)))
-    print("verify correct operation of time_base10_to_60")
-    # bug: 0.958333: 23:00 == 2260 ?
-    for i, testtime in enumerate(testtimes2):
-        print("%6f: %s == %s ?" % (testtime , testtimes1[i] , time_base10_to_60(testtime)))
-if(1):
-    print("verify correct operation of time_round30min")
-    testtimes1 = ["0:00" , "0:14" , "0:15" , "0:16", "0:29","0:30","0:31","0:44","0:45","0:46", "4:48"  , "7:12"  , "21:36" , "23:59"]
-    testtimes2 = ["0:00" , "0:00" , "0:00" , "0:30", "0:30","0:30","0:30","0:30","0:30","1:00", "5:00"  , "7:00"  , "21:30" , "00:00"]
-    for i, testtime in enumerate(testtimes1):
-        print("%6s: %s == %s ?" % (testtime , testtimes2[i] , time_round30min(pd.tslib.Timestamp(testtime))))
 # todo: plot by year, then by time.
 data['crash_time_dec'] = data.crash_datetime.apply(time_base10)
 # todo: figure out how to hist() with grouping by year, then group by time within each year
@@ -103,6 +38,7 @@ data['crash_time_dec'] = data.crash_datetime.apply(time_base10)
 # if(showplt): 
 #   plt.show()
 # data['crash_time_30m'] = data.crash_datetime.apply(time_round30min)
+# </crash_time>
 # process categorical data
 if(1):
     # replace ['No Data','Not Applicable'] with NaN
