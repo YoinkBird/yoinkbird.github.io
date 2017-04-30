@@ -52,6 +52,32 @@ def time_base10_to_60(time):
     min60 = round((hours10 * 60) % 60)     # 21.6*60 == 1296; 1296%60 == 36
     #print("%f %f" % (hours24,min60))
     return hours24 * 100 + min60
+# round to half hour
+def time_round30min(pd_ts_time):
+    import datetime
+    pd_ts_time = pd.tslib.Timestamp(pd_ts_time)
+    newtime = datetime.time()
+    retmin = 61
+    if(pd_ts_time.minute < 16):
+        newtime = datetime.time(pd_ts_time.hour,0)
+        retmin = 00
+    elif((pd_ts_time.minute > 15) & (pd_ts_time.minute < 46)):
+        newtime = datetime.time(pd_ts_time.hour,30)
+        retmin = "30"
+    elif(pd_ts_time.minute > 45):
+        pd_ts_time += datetime.timedelta(hours=1)
+        newtime = datetime.time(pd_ts_time.hour,00)
+        retmin = 00
+    #print("%s %s %f %f" % (pd_ts_time.pd_ts_time(), newtime, newtime.hour, newtime.minute))
+    time_str = "%s.%02d%02d" % (pd_ts_time.year, newtime.hour, newtime.minute)
+    # omit - would have to specify the year
+    # time2 = pd.tslib.Timestamp("%02d:%02d" % (newtime.hour, newtime.minute))
+    if(0):
+        time2 = pd.to_datetime(time_str, format="%Y.%H%M")
+    else:
+        time_str = "%02d%02d" % (newtime.hour, newtime.minute)
+        time2 = int(time_str)
+    return time2
 # testing - visual inspection
 if(1):
     print("verify correct operation of time_base10")
@@ -67,6 +93,11 @@ if(1):
     testtimes2 = ["0:00" , "4:48"  , "7:12"  , "21:36" , "23:56"]
     for i, testtime in enumerate(testtimes1):
         print("%s: %s == %s ?" % (testtime , testtimes2[i] , time_base10_to_60(testtime)))
+if(1):
+    testtimes1 = ["0:00" , "0:14" , "0:15" , "0:16", "0:29","0:30","0:31","0:44","0:45","0:46", "4:48"  , "7:12"  , "21:36" , "23:56"]
+    testtimes2 = ["0:00" , "0:00" , "0:00" , "0:30", "0:30","0:30","0:30","0:30","0:30","1:00", "5:00"  , "7:00"  , "21:30" , "00:00"]
+    for i, testtime in enumerate(testtimes1):
+        print("%s: %s == %s ?" % (testtime , testtimes2[i] , time_round30min(pd.tslib.Timestamp(testtime))))
 
 # todo: plot by year, then by time.
 data['crash_time_dec'] = data.crash_datetime.apply(time_base10)
@@ -74,6 +105,7 @@ data['crash_time_dec'] = data.crash_datetime.apply(time_base10)
 # data.crash_time_dec.hist(bins=48)
 # if(showplt): 
 #   plt.show()
+# data['crash_time_30m'] = data.crash_datetime.apply(time_round30min)
 # process categorical data
 if(1):
     # replace ['No Data','Not Applicable'] with NaN
