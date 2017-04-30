@@ -30,7 +30,7 @@ data.columns = process_cols(data)
 data.columns = data.columns.str.replace('crash_i_d', 'crash_id')
 # </crash_time>
 # convert integer crashtime to datetime with year
-data['crash_datetime'] = pd.to_datetime(data.apply(lambda x: "%s.%04d" % (x.crash_year,x.crash_time), axis=1),format="%Y.%H%M")
+data['crash_datetime'] = create_datetime_series(data)
 # todo: plot by year, then by time.
 data['crash_time_dec'] = data.crash_datetime.apply(time_base10)
 # todo: figure out how to hist() with grouping by year, then group by time within each year

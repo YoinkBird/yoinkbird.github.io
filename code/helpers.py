@@ -17,6 +17,14 @@ def print_test():
     return("hi")
 
 # time conversions
+# convert integer crashtime to datetime with year
+# input: dataframe with year and time (int)
+# todo: add month
+def create_datetime_series(df):
+    if('crash_month' in df):
+        print("-E-: function can't handle months yet")
+        return False
+    return pd.to_datetime(df.apply(lambda x: "%s.%04d" % (x.crash_year,x.crash_time), axis=1),format="%Y.%H%M")
 # convert to 24h time
 # data.crash_time = data.crash_time.apply(lambda x: str(x).zfill(4)) # leading zeros
 # could convert to datetime, but this forces a year,month,day to be present
