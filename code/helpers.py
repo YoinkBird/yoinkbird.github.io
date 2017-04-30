@@ -45,15 +45,14 @@ def time_base10(time):
     base10 = dech+decm
     return base10
 def time_base10_to_60(time):
+    verbose = 0
     # only round on final digit
     hours10 = time * 24  # 0.9 * 24  == 21.6
+    hours10 = round(hours10, 5) # round out floating point issues
     hours24 = int(hours10)  # int(21.6) == 21
     min60 = round((hours10 * 60) % 60)     # 21.6*60 == 1296; 1296%60 == 36
-    # handle exceptional cases, e.g. 23:00 = 0.958333 but int( 0.958333 * 24 ) == 22
-    if(min60 == 60 ):
-        hours24 += 1
-        min60    = 0
-    print("time: %f | hours10 %s | hours24 %s | min60 %s" % (time,hours10,hours24,min60))
+    if(verbose):
+        print("time: %f | hours24 %s | hours10 %s | min60 %s" % (time,hours24,hours10,min60))
     return hours24 * 100 + min60
 # round to half hour
 def time_round30min(pd_ts_time):
@@ -91,22 +90,26 @@ if(__name__ == '__main__'):
         testtimes2 = [0.0   , 0.2     , 0.3     , 0.9     , 0.999305556 , 0.040972222 , 0.958333333] # 1.0
         for i, testtime in enumerate(testtimes1):
             rettime = time_base10(testtime)
-            print("%6s: %s == %s ?" % (testtime , testtimes2[i] , time_base10(testtime)))
-            # TODO: find fuzzy comparison
-            # if(testtimes2[i] == round(rettime,2)):
+            status = "FAIL"
+            # round for comparisson because floating point gets messy
+            if(round(testtimes2[i],4) == round(rettime,4)):
+                status = "PASS"
+            print("%s: %6s: %s == %s ?" % (status, testtime , testtimes1[i] , rettime))
         print("verify correct operation of time_base10_to_60")
-        # bug: 0.958333: 23:00 == 2260 ?
         for i, testtime in enumerate(testtimes2):
-            print("%6f: %s == %s ?" % (testtime , testtimes1[i] , time_base10_to_60(testtime)))
-            if(int(testtimes1[i].replace(':','')) == time_base10_to_60(testtime)):
-                print("OK")
-            else:
-                print("FAIL")
+            status = "FAIL"
+            rettime = time_base10_to_60(testtime)
+            if(int(testtimes1[i].replace(':','')) == rettime):
+                status = "PASS"
+            print("%s: %6f: %s == %s ?" % (status, testtime , testtimes1[i] , rettime,))
     if(1):
         print("verify correct operation of time_round30min")
         testtimes1 = ["0:00" , "0:14" , "0:15" , "0:16", "0:29","0:30","0:31","0:44","0:45","0:46", "4:48"  , "7:12"  , "21:36" , "23:59"]
         testtimes2 = ["0:00" , "0:00" , "0:00" , "0:30", "0:30","0:30","0:30","0:30","0:30","1:00", "5:00"  , "7:00"  , "21:30" , "00:00"]
         for i, testtime in enumerate(testtimes1):
-            print("%6s: %s == %s ?" % (testtime , testtimes2[i] , time_round30min(pd.tslib.Timestamp(testtime))))
-
-
+            #rettime = time_round30min(pd.tslib.Timestamp(testtime))
+            rettime = time_round30min(testtime)
+            status = "FAIL"
+            if(int(testtimes2[i].replace(':','')) == rettime):
+                status = "PASS"
+            print("%s: %6s: %s == %s ?" % (status, testtime , testtimes2[i] , rettime))
