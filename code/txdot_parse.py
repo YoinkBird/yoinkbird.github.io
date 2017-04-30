@@ -50,7 +50,7 @@ def time_base10_to_60(time):
     hours10 = time * 24  # 0.9 * 24  == 21.6
     hours24 = int(hours10)  # int(21.6) == 21
     min60 = round((hours10 * 60) % 60)     # 21.6*60 == 1296; 1296%60 == 36
-    #print("%f %f" % (hours24,min60))
+    # print("time: %f | hours10 %f | hours24 %f | min60 %f" % (time,hours10,hours24,min60))
     return hours24 * 100 + min60
 # round to half hour
 def time_round30min(pd_ts_time):
@@ -81,24 +81,21 @@ def time_round30min(pd_ts_time):
 # testing - visual inspection
 if(1):
     print("verify correct operation of time_base10")
-    print("%s: %f == %f ?" % ("0:00"  , 0.0 , time_base10(pd.tslib.Timestamp("0:00"))))
-    print("%s: %f == %f ?" % ("4:48"  , 0.2 , time_base10(pd.tslib.Timestamp("4:48"))))
-    print("%s: %f == %f ?" % ("7:12"  , 0.3 , time_base10(pd.tslib.Timestamp("7:12"))))
-    print("%s: %f == %f ?" % ("21:36" , 0.9 , time_base10(pd.tslib.Timestamp("21:36"))))
-    print("%s: %f == %f ?" % ("23:56" , 0.99 , time_base10(pd.tslib.Timestamp("23:59"))))
-    #print("%s: %f == %f ?" % ("24:00" , 1.0 , time_base10(pd.tslib.Timestamp("24:00"))))
-if(1):
-    print("verify correct operation of time_base10_to_60")
-    testtimes1 = [0.0, 0.2, 0.3, 0.9, 0.99]
-    testtimes2 = ["0:00" , "4:48"  , "7:12"  , "21:36" , "23:56"]
+    # not testing 24:00 -> 1.0 because "hour must be in 0..23" for dateutil
+    testtimes1 = ["0:00", "4:48"  , "7:12"  , "21:36" , "23:59"     , "0:59"      , "23:00"    ] # "24:00"
+    testtimes2 = [0.0   , 0.2     , 0.3     , 0.9     , 0.999305556 , 0.040972222 , 0.958333333] # 1.0
     for i, testtime in enumerate(testtimes1):
-        print("%s: %s == %s ?" % (testtime , testtimes2[i] , time_base10_to_60(testtime)))
+        print("%6s: %f == %f ?" % (testtime , testtimes2[i] , time_base10(testtime)))
+    print("verify correct operation of time_base10_to_60")
+    # bug: 0.958333: 23:00 == 2260 ?
+    for i, testtime in enumerate(testtimes2):
+        print("%6f: %s == %s ?" % (testtime , testtimes1[i] , time_base10_to_60(testtime)))
 if(1):
-    testtimes1 = ["0:00" , "0:14" , "0:15" , "0:16", "0:29","0:30","0:31","0:44","0:45","0:46", "4:48"  , "7:12"  , "21:36" , "23:56"]
+    print("verify correct operation of time_round30min")
+    testtimes1 = ["0:00" , "0:14" , "0:15" , "0:16", "0:29","0:30","0:31","0:44","0:45","0:46", "4:48"  , "7:12"  , "21:36" , "23:59"]
     testtimes2 = ["0:00" , "0:00" , "0:00" , "0:30", "0:30","0:30","0:30","0:30","0:30","1:00", "5:00"  , "7:00"  , "21:30" , "00:00"]
     for i, testtime in enumerate(testtimes1):
-        print("%s: %s == %s ?" % (testtime , testtimes2[i] , time_round30min(pd.tslib.Timestamp(testtime))))
-
+        print("%6s: %s == %s ?" % (testtime , testtimes2[i] , time_round30min(pd.tslib.Timestamp(testtime))))
 # todo: plot by year, then by time.
 data['crash_time_dec'] = data.crash_datetime.apply(time_base10)
 # todo: figure out how to hist() with grouping by year, then group by time within each year
