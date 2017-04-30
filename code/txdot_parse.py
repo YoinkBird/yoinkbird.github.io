@@ -299,7 +299,7 @@ data_nonan = data[ predictors + responsecls ].dropna()
 X_train, X_test, y_train, y_test = model_selection.train_test_split(data_nonan[predictors],data_nonan[responsecls], test_size=testsize)
 
 from sklearn import tree
-clf = tree.DecisionTreeClassifier(max_depth = 5)
+clf = tree.DecisionTreeClassifier() #max_depth = 5)
 clf.fit(X_train,y_train)
 
 # prediction and scoring
@@ -308,6 +308,12 @@ print(model_selection.cross_val_score(clf, X_train, y_train.values.ravel()))
 y_pred = clf.predict_proba(X_test)
 print("-I-: cross_val_score against test")
 print(model_selection.cross_val_score(clf, X_test, y_test.values.ravel()))
+
+# DOC: How to interpret decision trees' graph results and find most informative features?
+# src: http://stackoverflow.com/a/34872454
+print("-I-: most important features:")
+for i in np.argsort(clf.feature_importances_)[::-1]:
+  print("%f : %s" % (clf.feature_importances_[i],predictors[i]))
 
 # display tree criteria
 # src: http://scikit-learn.org/stable/modules/tree.html#classification
@@ -324,6 +330,12 @@ dot_data = tree.export_graphviz(clf, out_file=None,
 
         )
 graph = pydotplus.graph_from_dot_data(dot_data)
-Image(graph.create_png())
-print("-I-: if img doesn't show, run \n Image(pydotplus.graph_from_dot_data(dot_data).create_png())")
+Image(graph.create_png() , retina=True)
+print("-I-: if img doesn't show, run \n Image(pydotplus.graph_from_dot_data(dot_data).create_png()) , retina=True)")
 print("-I-: End of File")
+
+
+# random
+'''
+# look into dictvectorizer dv.get_feature_names http://stackoverflow.com/a/34194521
+'''
