@@ -268,3 +268,16 @@ data[(data['intersection_related'] == 'Non Intersection') & data['intersecting_s
 
 data[(data['intersection_related'] == 'Non Intersection') & data['intersecting_street_name'].isnull()][colgrps['intersection']]
 '''
+# if total person count is needed
+#  print("-I-: creating total involved count")
+#  individual_counts = [
+#    'crash_death_count',
+#    'crash_incapacitating_injury_count',
+#    'crash_non-incapacitating_injury_count'
+#    'crash_not_injured_count',
+#    'crash_possible_injury_count',
+#  ]
+#  total_count = pd.Series(index=mapdf.index,dtype=int)
+#  for icount in individual_counts:
+#    total_count += mapdf[icount]
+##    mapdf['person_number'] = mapdf['person_number'] + mapdf[icount]
