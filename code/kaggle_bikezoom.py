@@ -17,12 +17,6 @@ sns.set(style="white", color_codes=True)
 # src: https://www.kaggle.com/mchirico/d/nhtsa/2015-traffic-fatalities/bike-zoom-chicago-map/output
 #  src https://www.kaggle.com/mchirico/d/nhtsa/2015-traffic-fatalities/bike-zoom-chicago-map/code
 
-# Read data 
-# import the "crash" data
-datafile = "../data/txdot_2010_2017.csv"
-
-(data,featdef) = preprocess_data(datafile)
-
 # create string for 2d javascript array for the map
 # format:
 # var crashes = [ ['<crash_id>', <lat>,      <lon>, <zIndex>,'<imgurl> # replaces gmaps pin'],
@@ -44,37 +38,6 @@ def df_as_js2d_arr_str(df, limit_for_testing=-1):
       jsrows += "['%s', %s, %s, %d, '%s'],\n" % (row.crash_id, row.latitude,row.longitude, rownum, imgurl)
   jsrows += "];\n"
   return jsrows
-
-# run for testing purposes
-if(__name__ == '__main__'):
-  verbose = 1
-  if(verbose):
-    print("-I-: testing kaggle bikezoom")
-  mapdf = data[list(featdef[featdef.jsmap == True].index) + ['bin_crash_severity']].dropna()
-  # add title attribute (i.e. column)
-  mapdf['title'] = pd.Series(index=featdef.index,dtype=str).replace(np.nan,False)
-  if(verbose):
-    print("-I-: created mapdf")
-
-  # generate rows
-  if(verbose):
-    print("-I-: generate javascript rows")
-  quicktest = 0
-  if(quicktest):  # generate limited array, print results
-    limit_for_testing=6
-    jsrows = df_as_js2d_arr_str(mapdf, limit_for_testing)
-    jsrows = df_as_js2d_arr_str(mapdf)
-    print("-I-: javascript rows")
-    print(jsrows)
-    print("-I-: javascript 2d arr")
-    js2darr = 'var crashes =' + df_as_js2d_arr_str(mapdf)
-    print(js2darr)
-  else: # generate full array, don't print results (i.e. don't fill up screen)
-    print("-I-: javascript 2d arr")
-    js2darr = 'var crashes =' + df_as_js2d_arr_str(mapdf)
-    print("-I-: ...done")
-
-print("-I-: DEVELOPMENT - current working progress")
 
 # insert js into html templates
 def generate_map_html_page(js2darr):
@@ -184,15 +147,8 @@ def generate_map_html_page(js2darr):
 """ 
   htmlpage = "%s\n%s\n%s" % (headV, js2darr, tailV)
   return htmlpage
-print("-I-: html gen")
-htmlpage = generate_map_html_page(js2darr)
 
 
-print("-I-: html write")
-# display in qtconsole - not working though
-# src http://stackoverflow.com/a/35760941
-from IPython.core.display import display, HTML
-display(HTML(htmlpage))
 def write_html_files(htmlpage):
   # Write out 
   f=open('__results__.html','w')
@@ -203,6 +159,50 @@ def write_html_files(htmlpage):
   f=open('output.html','w')
   f.write(htmlpage)
   f.close()
-write_html_files(htmlpage)
 
-print("-I-: DEVELOPMENT - End of working File")
+
+# run for testing purposes
+if(__name__ == '__main__'):
+  # Read data 
+  # import the "crash" data
+  datafile = "../data/txdot_2010_2017.csv"
+
+  (data,featdef) = preprocess_data(datafile)
+
+  verbose = 1
+  if(verbose):
+    print("-I-: testing kaggle bikezoom")
+  mapdf = data[list(featdef[featdef.jsmap == True].index) + ['bin_crash_severity']].dropna()
+  # add title attribute (i.e. column)
+  mapdf['title'] = pd.Series(index=featdef.index,dtype=str).replace(np.nan,False)
+  if(verbose):
+    print("-I-: created mapdf")
+
+  # generate rows
+  if(verbose):
+    print("-I-: generate javascript rows")
+  quicktest = 0
+  if(quicktest):  # generate limited array, print results
+    limit_for_testing=6
+    jsrows = df_as_js2d_arr_str(mapdf, limit_for_testing)
+    jsrows = df_as_js2d_arr_str(mapdf)
+    print("-I-: javascript rows")
+    print(jsrows)
+    print("-I-: javascript 2d arr")
+    js2darr = 'var crashes =' + df_as_js2d_arr_str(mapdf)
+    print(js2darr)
+  else: # generate full array, don't print results (i.e. don't fill up screen)
+    print("-I-: javascript 2d arr")
+    js2darr = 'var crashes =' + df_as_js2d_arr_str(mapdf)
+    print("-I-: ...done")
+
+  print("-I-: html gen")
+  htmlpage = generate_map_html_page(js2darr)
+  print("-I-: html write")
+  # display in qtconsole - not working though
+  # src http://stackoverflow.com/a/35760941
+  from IPython.core.display import display, HTML
+  display(HTML(htmlpage))
+  write_html_files(htmlpage)
+  print("-I-: DEVELOPMENT - current working progress")
+  print("-I-: DEVELOPMENT - End of working File")
