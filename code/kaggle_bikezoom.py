@@ -24,7 +24,14 @@ datafile = "../data/txdot_2010_2017.csv"
 (data,featdef) = preprocess_data(datafile)
 
 # create string for 2d javascript array for the map
-def df_as_js2d_arr_str(df, limit_for_testing=''):
+# format:
+# var crashes = [ ['<crash_id>', <lat>,      <lon>, <zIndex>,'<imgurl> # replaces gmaps pin'],
+# var crashes = [ ['11243623', 30.28608823, -97.6805777, 0, 'https://storage.googleapis.com/montco-stats/images/bike.png'], ];
+# original format:
+# var crashes = [ ['<case id> <num persons> <severity> <date> <time>', <lat>,      <lon>, <zIndex>,'<imgurl> # replaces gmaps pin'],
+# var crashes = [ ['ST_CASE:10268 PER_NO:1 DEATH_TM:9999 2015-05-27 09:00:00 ', 30.26576667, -87.64966944, 0,'https://storage.googleapis.com/montco-stats/images/bikeKilled.png'],
+# ideas: crash_id: crash_id | severity | date | time
+def df_as_js2d_arr_str(df, limit_for_testing=-1):
   jsrows = "[\n"
   for rownum,row in df[:limit_for_testing].iterrows():
       #print(rownum)
@@ -65,13 +72,20 @@ if(__name__ == '__main__'):
   # generate rows
   if(verbose):
     print("-I-: generate javascript rows")
-  limit_for_testing=6
-  jsrows = df_as_js2d_arr_str(mapdf, limit_for_testing)
-  print("-I-: javascript rows")
-  print(jsrows)
-  js2darr = 'var crashes =' + df_as_js2d_arr_str(mapdf, limit_for_testing)
-  print("-I-: javascript 2d arr")
-  print(js2darr)
+  quicktest = 0
+  if(quicktest):  # generate limited array, print results
+    limit_for_testing=6
+    jsrows = df_as_js2d_arr_str(mapdf, limit_for_testing)
+    jsrows = df_as_js2d_arr_str(mapdf)
+    print("-I-: javascript rows")
+    print(jsrows)
+    print("-I-: javascript 2d arr")
+    js2darr = 'var crashes =' + df_as_js2d_arr_str(mapdf)
+    print(js2darr)
+  else: # generate full array, don't print results (i.e. don't fill up screen)
+    print("-I-: javascript 2d arr")
+    js2darr = 'var crashes =' + df_as_js2d_arr_str(mapdf)
+    print("-I-: ...done")
 
 print("-I-: DEVELOPMENT - current working progress")
 print("-I-: html templates")
@@ -180,7 +194,12 @@ tailV="""      function setMarkers(map) {
       
 """ 
 print("-I-: html gen")
+htmlpage = "%s\n%s\n%s" % (headV, js2darr, tailV)
 
+# display in qtconsole - not working though
+# src http://stackoverflow.com/a/35760941
+from IPython.core.display import display, HTML
+display(HTML(htmlpage))
 # Write out 
 f=open('__results__.html','w')
 f.write(headV)
