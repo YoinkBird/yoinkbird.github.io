@@ -39,12 +39,17 @@ data['crash_time_dec'] = data.crash_datetime.apply(time_base10)
 #   plt.show()
 # data['crash_time_30m'] = data.crash_datetime.apply(time_round30min)
 # </crash_time>
-# process categorical data
+# convert to 'nan'
 if(1):
     # replace ['No Data','Not Applicable'] with NaN
     data.replace(to_replace='No Data', value=np.nan, inplace=True)
     data.replace(to_replace='Not Applicable', value=np.nan, inplace=True)
     data.replace(to_replace='UNKNOWN', value=np.nan, inplace=True) # intersecting_street_name
+# GPS coordinates were initially read in as string because missing entries were called 'No Data'
+data['latitude'] = data['latitude'].astype(float)
+data['longitude'] = data['longitude'].astype(float)
+# process categorical data
+if(1):
     # factorizable data
     # convert 'Wet' 'Dry' to '1' '0'
     data['surface_condition'] = data['surface_condition'].factorize()[0]
