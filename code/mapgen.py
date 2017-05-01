@@ -78,7 +78,12 @@ def generate_map_html_page(js2darr):
   <!--
   original source: https://www.kaggle.com/mchirico/d/nhtsa/2015-traffic-fatalities/bike-zoom-chicago-map/code
   -->
+"""
+# </headV>
+
+  scriptSource="""
   <body> 
+
       
 
       <!--  DataCanary_s fix -->
@@ -104,6 +109,7 @@ def generate_map_html_page(js2darr):
 
           }
 """
+# </scriptSource>
 
   tailV="""
     function setMarkers(map) {
@@ -152,20 +158,21 @@ def generate_map_html_page(js2darr):
           }
         }
 
-                          </script>
+    </script>
 
             <!--
             key="AIzaSyALU94pLkit5lx_QU62wnzOsO6y1H_BWfI"
             src="https://maps.googleapis.com/maps/api/js?key="+key+"&callback=initMap"></script>
             -->
         <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALU94pLkit5lx_QU62wnzOsO6y1H_BWfI&callback=initMap"></script>
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALU94pLkit5lx_QU62wnzOsO6y1H_BWfI&libraries=visualization&callback=initMap"></script>
 
   </body>
 </html>
       
 """ 
-  htmlpage = "%s\n%s\n%s" % (headV, js2darr, tailV)
+  scriptData="<!-- data_source: load all at once within these script tags -->\n<script>%s </script>\n<!-- data_source: done-->" % js2darr
+  htmlpage = "%s\n%s\n%s\n%s" % (headV, scriptData, scriptSource, tailV)
   return htmlpage
 
 
