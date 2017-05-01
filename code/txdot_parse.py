@@ -1,5 +1,6 @@
 
 from helpers import *
+from feature_definitions import *
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import (metrics, model_selection, linear_model, preprocessing, ensemble, neighbors, decomposition)
 import matplotlib.pyplot as plt
@@ -14,6 +15,8 @@ import re
 # import the "crash" data
 datafile = "../data/txdot_2010_2017.csv"
 data = pd.read_csv(datafile,header=7)
+# feature definitions and properties
+featdef = get_feature_defs()
 print(list(data.columns))
 
 # try something interesting - track the "categories" of columns
@@ -235,16 +238,9 @@ pairplot_var_list = [
 ## 'surface_condition'
  ]
 
-dummies_needed_list = [
- 'crash_severity',
- 'day_of_week',
- 'intersection_related',
- 'light_condition',
- 'manner_of_collision',
-### 'number_of_entering_roads',
- 'road_base_type',
-# 'surface_condition' # factorized
-        ]
+
+# list of vars which become dummie'd
+dummies_needed_list = list(featdef[featdef.dummies == 1].index)
 
 # tmp disable
 if(0):
