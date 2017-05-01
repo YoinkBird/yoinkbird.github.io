@@ -33,7 +33,8 @@ def df_as_js2d_arr_str(df, limit_for_testing=''):
       imgurl = 'https://storage.googleapis.com/montco-stats/images/bike.png'
       if(row['bin_crash_severity']):
         imgurl = 'https://storage.googleapis.com/montco-stats/images/bikeKilled.png'
-      jsrows += "['%s', %s, %s, %s],\n" % (row.crash_id, row.latitude,row.longitude,imgurl)
+      # 'title', lat, lon, zindex, imgurl
+      jsrows += "['%s', %s, %s, %d, '%s'],\n" % (row.crash_id, row.latitude,row.longitude, rownum, imgurl)
   jsrows += "];\n"
   return jsrows
 
@@ -71,63 +72,16 @@ if(__name__ == '__main__'):
   js2darr = 'var crashes =' + df_as_js2d_arr_str(mapdf, limit_for_testing)
   print("-I-: javascript 2d arr")
   print(js2darr)
-print("-I-: DEVELOPMENT - End of working File")
 
-FILE="../input/accident.csv"
-d=pd.read_csv(FILE)
-
-FILE="../input/pbtype.csv"
-b=pd.read_csv(FILE)
-
-FILE="../input/person.csv"
-person=pd.read_csv(FILE)
-
-def f(x):
-    year = x[0]
-    month = x[1]
-    day = x[2]
-    hour = x[3]
-    minute = x[4]
-    # Sometimes they don't know hour and minute
-    if hour == 99:
-        hour = 0
-    if minute == 99:
-        minute = 0
-    s = "%02d-%02d-%02d %02d:%02d:00" % (year,month,day,hour,minute)
-    c = datetime.datetime.strptime(s,'%Y-%m-%d %H:%M:%S')
-    return c
- 
-d['crashTime']   = d[['YEAR','MONTH','DAY','HOUR','MINUTE']].apply(f, axis=1)
-d['crashDay']    = d['crashTime'].apply(lambda x: x.date())
-d['crashMonth']  = d['crashTime'].apply(lambda x: x.strftime("%B") )
-d['crashMonthN'] = d['crashTime'].apply(lambda x: x.strftime("%d") ) # sorting
-
-
-db = pd.merge(d, b, how='right',left_on='ST_CASE', right_on='ST_CASE')
-
-per = person[person['PER_TYP']==6][['ST_CASE','PER_NO','STR_VEH','DEATH_TM']]
-
-# Throw this back in d
-d = pd.merge(per, db, how='left',left_on=['ST_CASE','PER_NO'], right_on=['ST_CASE','PER_NO'])
-
-# Throw this back in d
-#d = db[db['PBPTYPE']==6][['ST_CASE','crashTime','PER_NO','LATITUDE','LONGITUD','FATALS','DRUNK_DR']]
-
-# db['PBPTYPE']==6
-
-
-# Set index
-# d.index = pd.DatetimeIndex(d.timeStamp)
-
-
-
+print("-I-: DEVELOPMENT - current working progress")
+print("-I-: html templates")
 # Creating an HTML HEADER FILE
 headV="""<!DOCTYPE html>
 <html>
   <head>
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <title>montcoalert.org</title>
+    <title>bicycle accidents - severe and not severe</title>
     <style>
       html, body {
       height: 100%;
@@ -147,9 +101,10 @@ headV="""<!DOCTYPE html>
     <script>
 
       function initMap() {
+          //center: {lat: 41.7720713, lng: -87.5867187}
       var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 14,
-        center: {lat: 41.7720713, lng: -87.5867187}
+        center: {lat: 30.2849, lng: -97.7341}
       
       });
       	 
@@ -213,13 +168,84 @@ tailV="""      function setMarkers(map) {
 
                           </script>
 
+            <!--
+            key="AIzaSyALU94pLkit5lx_QU62wnzOsO6y1H_BWfI"
+            src="https://maps.googleapis.com/maps/api/js?key="+key+"&callback=initMap"></script>
+            -->
         <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0wJsknjKk5pkO2aOqsIGkSNcELPjc830&signed_in=true&callback=initMap"></script>
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALU94pLkit5lx_QU62wnzOsO6y1H_BWfI&callback=initMap"></script>
 
   </body>
 </html>
       
 """ 
+print("-I-: html gen")
+
+# Write out 
+f=open('__results__.html','w')
+f.write(headV)
+f.write(js2darr)
+f.write(tailV)
+f.close()
+
+# Write out 
+f=open('output.html','w')
+f.write(headV)
+f.write(js2darr)
+f.write(tailV)
+f.close()
+
+print("-I-: DEVELOPMENT - End of working File")
+
+## original approach
+FILE="../input/accident.csv"
+d=pd.read_csv(FILE)
+
+FILE="../input/pbtype.csv"
+b=pd.read_csv(FILE)
+
+FILE="../input/person.csv"
+person=pd.read_csv(FILE)
+
+def f(x):
+    year = x[0]
+    month = x[1]
+    day = x[2]
+    hour = x[3]
+    minute = x[4]
+    # Sometimes they don't know hour and minute
+    if hour == 99:
+        hour = 0
+    if minute == 99:
+        minute = 0
+    s = "%02d-%02d-%02d %02d:%02d:00" % (year,month,day,hour,minute)
+    c = datetime.datetime.strptime(s,'%Y-%m-%d %H:%M:%S')
+    return c
+ 
+d['crashTime']   = d[['YEAR','MONTH','DAY','HOUR','MINUTE']].apply(f, axis=1)
+d['crashDay']    = d['crashTime'].apply(lambda x: x.date())
+d['crashMonth']  = d['crashTime'].apply(lambda x: x.strftime("%B") )
+d['crashMonthN'] = d['crashTime'].apply(lambda x: x.strftime("%d") ) # sorting
+
+
+db = pd.merge(d, b, how='right',left_on='ST_CASE', right_on='ST_CASE')
+
+per = person[person['PER_TYP']==6][['ST_CASE','PER_NO','STR_VEH','DEATH_TM']]
+
+# Throw this back in d
+d = pd.merge(per, db, how='left',left_on=['ST_CASE','PER_NO'], right_on=['ST_CASE','PER_NO'])
+
+# Throw this back in d
+#d = db[db['PBPTYPE']==6][['ST_CASE','crashTime','PER_NO','LATITUDE','LONGITUD','FATALS','DRUNK_DR']]
+
+# db['PBPTYPE']==6
+
+
+# Set index
+# d.index = pd.DatetimeIndex(d.timeStamp)
+
+
+
 # TODO: s = 'var crashes =' + df_as_js2d_arr_str(mapdf, limit_for_testing)
 s=' var crashes = [\n'
 
