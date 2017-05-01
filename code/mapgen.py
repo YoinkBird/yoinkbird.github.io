@@ -124,6 +124,7 @@ def generate_map_html_page(js2darr):
   scriptSource="""
   <body> 
     <div id="floating-panel">
+      <button onclick="toggleMarkers()">Toggle Accident Markers</button>
       <button onclick="toggleHeatmap()">Toggle Heatmap</button>
       <button onclick="changeGradient()">Change gradient</button>
       <button onclick="changeRadius()">Change radius</button>
@@ -153,6 +154,7 @@ def generate_map_html_page(js2darr):
             map: map
           });
           changeGradient();
+          setMarkers(map);
           // Add traffic
           trafficLayer = new google.maps.TrafficLayer();
           trafficLayer.setMap(map);	
@@ -198,6 +200,7 @@ def generate_map_html_page(js2darr):
 # </scriptSource>
 
   tailV="""
+    var posMarkers = {}; // track the markers
     function setMarkers(map) {
         // Adds markers to the map.
 
@@ -239,10 +242,24 @@ def generate_map_html_page(js2darr):
             shape: shape,
             draggable: true,
             title: htmlEntities(crash[0]),
+            visible: false,
             zIndex: crash[3]
             });
+          posMarkers[i] = marker; // track the markers
           }
         }
+    // http://stackoverflow.com/a/11270368
+    function toggleMarkers(map) {
+      for (var index in crashes){
+        if(posMarkers[index].getVisible()){
+          posMarkers[index].setVisible(false);
+        }
+        else{
+          posMarkers[index].setVisible(true);
+        }
+      }
+    }
+
 
     </script>
 
