@@ -87,69 +87,70 @@ def generate_map_html_page(js2darr):
 
       function initMap() {
           //center: {lat: 41.7720713, lng: -87.5867187}
-      var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 14,
-        center: {lat: 30.2849, lng: -97.7341}
-      
-      });
-      	 
-      setMarkers(map);
-      // Add traffic
-      trafficLayer = new google.maps.TrafficLayer();
-	  trafficLayer.setMap(map);	
-	  
-	  // Add bikeLayer
-	  var bikeLayer = new google.maps.BicyclingLayer();
-      bikeLayer.setMap(map);
-	  
-      }
+          var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 14,
+            center: {lat: 30.2849, lng: -97.7341}
+
+            });
+
+          setMarkers(map);
+          // Add traffic
+          trafficLayer = new google.maps.TrafficLayer();
+          trafficLayer.setMap(map);	
+
+          // Add bikeLayer
+          var bikeLayer = new google.maps.BicyclingLayer();
+          bikeLayer.setMap(map);
+
+          }
 """
 
-  tailV="""      function setMarkers(map) {
-      // Adds markers to the map.
+  tailV="""
+    function setMarkers(map) {
+        // Adds markers to the map.
 
-      // Marker sizes are expressed as a Size of X,Y where the origin of the image
-      // (0,0) is located in the top left of the image.
+        // Marker sizes are expressed as a Size of X,Y where the origin of the image
+        // (0,0) is located in the top left of the image.
 
-      // Origins, anchor positions and coordinates of the marker increase in the X
-      // direction to the right and in the Y direction down.
-      var image = {
-            url: 'https://storage.googleapis.com/montco-stats/images/carCrash.png',
+        // Origins, anchor positions and coordinates of the marker increase in the X
+        // direction to the right and in the Y direction down.
+        var image = {
+          url: 'https://storage.googleapis.com/montco-stats/images/carCrash.png',
 
-      // This marker is 20 pixels wide by 32 pixels high.
-      size: new google.maps.Size(20, 32),
-      // The origin for this image is (0, 0).
-      origin: new google.maps.Point(0, 0),
-      // The anchor for this image is the base of the flagpole at (0, 32).
-      anchor: new google.maps.Point(0, 32)
-      };
-      // Shapes define the clickable region of the icon. The type defines an HTML
-      // <area> element 'poly' which traces out a polygon as a series of X,Y points.
-// The final coordinate closes the poly by connecting to the first coordinate.
+          // This marker is 20 pixels wide by 32 pixels high.
+          size: new google.maps.Size(20, 32),
+          // The origin for this image is (0, 0).
+          origin: new google.maps.Point(0, 0),
+          // The anchor for this image is the base of the flagpole at (0, 32).
+          anchor: new google.maps.Point(0, 32)
+          };
+        // Shapes define the clickable region of the icon. The type defines an HTML
+        // <area> element 'poly' which traces out a polygon as a series of X,Y points.
+        // The final coordinate closes the poly by connecting to the first coordinate.
 
-      function htmlEntities(str) {
-//         return String(str).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-         return String(str).replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-       }
+        function htmlEntities(str) {
+          // return String(str).replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+          return String(str).replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+          }
 
-      var shape = {
-      coords: [1, 1, 1, 20, 18, 20, 18, 1],
-      type: 'poly'
-      };
-      
-       for (var i = 0; i < crashes.length; i++) {
-                          var crash = crashes[i];
-                          var marker = new google.maps.Marker({
-                          position: {lat: crash[1], lng: crash[2]},
-                          map: map,
-                          icon: crash[4],
-                          shape: shape,
-                          draggable: true,
-                          title: htmlEntities(crash[0]),
-                          zIndex: crash[3]
-                          });
-                          }
-                          }
+        var shape = {
+          coords: [1, 1, 1, 20, 18, 20, 18, 1],
+          type: 'poly'
+          };
+
+        for (var i = 0; i < crashes.length; i++) {
+          var crash = crashes[i];
+          var marker = new google.maps.Marker({
+            position: {lat: crash[1], lng: crash[2]},
+            map: map,
+            icon: crash[4],
+            shape: shape,
+            draggable: true,
+            title: htmlEntities(crash[0]),
+            zIndex: crash[3]
+            });
+          }
+        }
 
                           </script>
 
