@@ -237,64 +237,7 @@ if(__name__ == '__main__'):
     # no longer need to convert headers, already done in process_data_punctuation
     pp.pprint(list(data_dummies))
 
-    print("-I-: train-test split")
-
-    # pca stub
-    # pca = decomposition.PCA(svd_solver='full')
-    # pca.fit(pd.get_dummies(data[dummies_needed_list])).transform(pd.get_dummies(data[dummies_needed_list]))
-
-    # predictors  = list(featdef[(featdef.regtype == 'bin_cat') & (featdef.target != True)].index)
-    # responsecls = list(featdef[(featdef.regtype == 'bin_cat') & (featdef.target == True)].index)
-    predictors = [
-    # 'crash_time',
-    # 'crash_time_dec',
-     'bin_intersection_related',
-     'bin_light_condition',
-     'bin_manner_of_collision',
-     ]
-    responsecls = [
-     'bin_crash_severity'
-     ]
-    testsize = 0.3
-    data_nonan = data[ predictors + responsecls ].dropna()
-    X_train, X_test, y_train, y_test = model_selection.train_test_split(data_nonan[predictors],data_nonan[responsecls], test_size=testsize)
-
-    from sklearn import tree
-    clf = tree.DecisionTreeClassifier() #max_depth = 5)
-    clf.fit(X_train,y_train)
-
-    # prediction and scoring
-    print("-I-: cross_val_score on train (itself)")
-    print(model_selection.cross_val_score(clf, X_train, y_train.values.ravel()))
-    y_pred = clf.predict_proba(X_test)
-    print("-I-: cross_val_score against test")
-    print(model_selection.cross_val_score(clf, X_test, y_test.values.ravel()))
-
-    # DOC: How to interpret decision trees' graph results and find most informative features?
-    # src: http://stackoverflow.com/a/34872454
-    print("-I-: most important features:")
-    for i in np.argsort(clf.feature_importances_)[::-1]:
-      print("%f : %s" % (clf.feature_importances_[i],predictors[i]))
-
-    # display tree criteria
-    # src: http://scikit-learn.org/stable/modules/tree.html#classification
-    from IPython.display import Image
-    # pydot plus had to be installed as python -m pip
-    # src : http://stackoverflow.com/a/42469100
-    import pydotplus
-    dot_data = tree.export_graphviz(clf, out_file=None,
-            feature_names=predictors,
-            class_names=['0']+responsecls, # seems to require at least two class names
-            rounded=True,
-            filled=True,
-            # proportion = True,  : bool, optional (default=False) When set to True, change the display of ‘values’ and/or ‘samples’ to be proportions and percentages respectively.
-
-            )
-    graph = pydotplus.graph_from_dot_data(dot_data)
-    Image(graph.create_png() , retina=True)
-    print("-I-: if img doesn't show, run \n Image(pydotplus.graph_from_dot_data(dot_data).create_png() , retina=True)")
     print("-I-: End of File")
-
 
 
 # miscellaneous
@@ -316,15 +259,3 @@ data[(data['intersection_related'] == 'Non Intersection') & data['intersecting_s
 
 data[(data['intersection_related'] == 'Non Intersection') & data['intersecting_street_name'].isnull()][colgrps['intersection']]
 '''
-
-# random
-'''
-# look into dictvectorizer dv.get_feature_names http://stackoverflow.com/a/34194521
-'''
-# DOC
-# feature importance and feature selection
-# e.g. reducing complexity of a tree model
-# https://www.analyticsvidhya.com/blog/2016/12/introduction-to-feature-selection-methods-with-an-example-or-how-to-select-the-right-variables/
-# 
-# automatically discarding low-importance features
-# http://scikit-learn.org/stable/modules/feature_selection.html#feature-selection-using-selectfrommodel
