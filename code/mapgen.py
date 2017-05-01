@@ -152,7 +152,7 @@ def generate_map_html_page(js2darr):
             data: getPoints(),
             map: map
           });
-          //setMarkers(map);
+          changeGradient();
           // Add traffic
           trafficLayer = new google.maps.TrafficLayer();
           trafficLayer.setMap(map);	
