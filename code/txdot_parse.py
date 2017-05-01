@@ -203,92 +203,25 @@ if(1):
 else:
   print("-I-: Skipping...")
 
-pairplot_bin_var_list = [
-# 'crash_id',
-## 'average_daily_traffic_amount',
-## 'average_daily_traffic_year',
- 'crash_death_count',
-# 'crash_incapacitating_injury_count',
-# 'crash_non-incapacitating_injury_count',
-# 'crash_not_injured_count',
-# 'crash_possible_injury_count',
- 'bin_crash_severity',
- 'crash_time',
- 'crash_year',
-## 'day_of_week',
-# 'intersecting_street_name',
- 'bin_intersection_related',
-# 'latitude',
- 'bin_light_condition',
-# 'longitude',
- 'bin_manner_of_collision',
-## 'medical_advisory_flag',
-### 'number_of_entering_roads',
-### 'number_of_lanes',
-# 'object_struck',
-## 'road_base_type',
- 'speed_limit',
-# 'street_name',
-## 'surface_condition'
- ]
-pairplot_var_list = [
-# 'crash_id',
- 'average_daily_traffic_amount',
- 'average_daily_traffic_year',
- 'crash_death_count',
-# 'crash_incapacitating_injury_count',
-# 'crash_non-incapacitating_injury_count',
-# 'crash_not_injured_count',
-# 'crash_possible_injury_count',
- 'crash_severity',
- 'crash_time',
- 'crash_year',
-## 'day_of_week',
-# 'intersecting_street_name',
- 'intersection_related',
-# 'latitude',
- 'light_condition',
-# 'longitude',
- 'manner_of_collision',
-## 'medical_advisory_flag',
-### 'number_of_entering_roads',
-### 'number_of_lanes',
-# 'object_struck',
-## 'road_base_type',
- 'speed_limit',
-# 'street_name',
-## 'surface_condition'
- ]
+# alternative visualisation
+datapt = data.pivot_table(values=['crash_death_count','crash_incapacitating_injury_count','crash_non-incapacitating_injury_count'], index=['speed_limit','crash_time'])
+print(datapt)
 
 
-# list of vars which become dummie'd
-dummies_needed_list = list(featdef[featdef.dummies == 1].index)
-
-# tmp disable
+# inspect features with high covariance
+pairplot_bin_var_list = list(featdef[featdef['pairplot']].index)
 if(0):
     sns.pairplot(data, vars=pairplot_var_list)
     plt.show()
 
-# alternative visualisation
-datapt = data.pivot_table(values=['crash_death_count','crash_incapacitating_injury_count','crash_non-incapacitating_injury_count'], index=['speed_limit','crash_time'])
-print(datapt)
+# list of vars which become dummie'd
+dummies_needed_list = list(featdef[featdef.dummies == 1].index)
 
 # dummies
 # http://stackoverflow.com/a/36285489 - use of columns=
 data_dummies = pd.get_dummies(data, columns=dummies_needed_list)#.columns.str.replace('[,\s]+','_').str.lower()
 data_dummies.columns = process_cols(data_dummies)
 pp.pprint(list(data_dummies))
-
-# stub for replacing the lighting values
-'''
- 'Dark, Lighted', 'dark_lighted_yes'
- 'Dark, Not Lighted', 'dark_lighted_no'
- 'Dark, Unknown Lighting', 'dark_lighted_unknown'
- 'Dawn',
- 'Daylight',
- 'Dusk',
- 'Unknown',
-'''
 
 # pca stub
 # pca = decomposition.PCA(svd_solver='full')
