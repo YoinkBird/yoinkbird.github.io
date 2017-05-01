@@ -39,6 +39,15 @@ def df_as_js2d_arr_str(df, limit_for_testing=-1):
   jsrows += "];\n"
   return jsrows
 
+def df_get_gps_coord_js_code(df, limit_for_testing=-1):
+  jsrows = ""
+  for rownum,row in df[:limit_for_testing].iterrows():
+      #print(rownum)
+      row_ind = df.index.get_loc(rownum)
+      # 'title', lat, lon, zindex, imgurl
+      jsrows += "new google.maps.LatLng(%s, %s),\n" % (row.latitude, row.longitude)
+  return jsrows
+
 def get_map_df(data, featdef):
   mapdf = data[list(featdef[featdef.jsmap == True].index) + ['bin_crash_severity']].dropna()
   # add title attribute (i.e. column)
@@ -48,10 +57,13 @@ def get_map_df(data, featdef):
 def get_html_map_from_df(data, featdef):
   mapdf = get_map_df(data,featdef)
   js2darr = 'var crashes =' + df_as_js2d_arr_str(mapdf)
+  jsFuncGps = 'function getPoints() { return ['
+  jsFuncGps += df_get_gps_coord_js_code(mapdf)
+  jsFuncGps += '];}'
   if(verbose):
     print("-I-: ...done")
   print("-I-: html gen")
-  htmlpage = generate_map_html_page(js2darr)
+  htmlpage = generate_map_html_page(js2darr + "\n" + jsFuncGps)
   write_html_files(htmlpage)
   return htmlpage
 
@@ -65,6 +77,11 @@ def generate_map_html_page(js2darr):
     <meta charset="utf-8">
     <title>bicycle accidents - severe and not severe</title>
     <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
       html, body {
       height: 100%;
       margin: 0;
@@ -73,32 +90,69 @@ def generate_map_html_page(js2darr):
       #map {
       height: 100%;
       }
+      #floating-panel {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+      #floating-panel {
+        background-color: #fff;
+        border: 1px solid #999;
+        left: 25%;
+        padding: 5px;
+        position: absolute;
+        top: 10px;
+        z-index: 5;
+      }
     </style>
   </head>
   <!--
   original source: https://www.kaggle.com/mchirico/d/nhtsa/2015-traffic-fatalities/bike-zoom-chicago-map/code
+  heatmap  source: https://www.kaggle.com/mchirico/d/nhtsa/2015-traffic-fatalities/google-heatmap-of-bike-fatalities/code
   -->
 """
 # </headV>
 
   scriptSource="""
   <body> 
+    <div id="floating-panel">
+      <button onclick="toggleHeatmap()">Toggle Heatmap</button>
+      <button onclick="changeGradient()">Change gradient</button>
+      <button onclick="changeRadius()">Change radius</button>
+      <button onclick="changeOpacity()">Change opacity</button>
+    </div>
 
       
 
       <!--  DataCanary_s fix -->
       <div id="map" class="main-container"></div>
     <script>
+      // This example requires the Visualization library. Include the libraries=visualization
+      // parameter when you first load the API. For example:
+      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization">
 
+      var map, heatmap;
       function initMap() {
           //center: {lat: 41.7720713, lng: -87.5867187}
-          var map = new google.maps.Map(document.getElementById('map'), {
+          map = new google.maps.Map(document.getElementById('map'), {
             zoom: 14,
             center: {lat: 30.2849, lng: -97.7341}
 
             });
 
-          setMarkers(map);
+          heatmap = new google.maps.visualization.HeatmapLayer({
+            data: getPoints(),
+            map: map
+          });
+          //setMarkers(map);
           // Add traffic
           trafficLayer = new google.maps.TrafficLayer();
           trafficLayer.setMap(map);	
@@ -108,6 +162,38 @@ def generate_map_html_page(js2darr):
           bikeLayer.setMap(map);
 
           }
+      function toggleHeatmap() {
+        heatmap.setMap(heatmap.getMap() ? null : map);
+      }
+      function changeGradient() {
+        var gradient = [
+          'rgba(0, 255, 255, 0)',
+          'rgba(0, 255, 255, 1)',
+          'rgba(0, 191, 255, 1)',
+          'rgba(0, 127, 255, 1)',
+          'rgba(0, 63, 255, 1)',
+          'rgba(0, 0, 255, 1)',
+          'rgba(0, 0, 223, 1)',
+          'rgba(0, 0, 191, 1)',
+          'rgba(0, 0, 159, 1)',
+          'rgba(0, 0, 127, 1)',
+          'rgba(63, 0, 91, 1)',
+          'rgba(127, 0, 63, 1)',
+          'rgba(191, 0, 31, 1)',
+          'rgba(255, 0, 0, 1)'
+        ]
+        heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
+      }
+
+      function changeRadius() {
+        heatmap.set('radius', heatmap.get('radius') ? null : 20);
+      }
+
+      function changeOpacity() {
+        heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
+      }
+
+
 """
 # </scriptSource>
 
