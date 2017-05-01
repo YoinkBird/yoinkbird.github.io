@@ -88,9 +88,11 @@ if(__name__ == '__main__'):
     print("-I-: ...done")
 
 print("-I-: DEVELOPMENT - current working progress")
-print("-I-: html templates")
-# Creating an HTML HEADER FILE
-headV="""<!DOCTYPE html>
+
+# insert js into html templates
+def generate_map_html_page(js2darr):
+  # Creating an HTML HEADER FILE
+  headV="""<!DOCTYPE html>
 <html>
   <head>
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
@@ -134,7 +136,7 @@ headV="""<!DOCTYPE html>
       }
 """
 
-tailV="""      function setMarkers(map) {
+  tailV="""      function setMarkers(map) {
       // Adds markers to the map.
 
       // Marker sizes are expressed as a Size of X,Y where the origin of the image
@@ -193,26 +195,28 @@ tailV="""      function setMarkers(map) {
 </html>
       
 """ 
+  htmlpage = "%s\n%s\n%s" % (headV, js2darr, tailV)
+  return htmlpage
 print("-I-: html gen")
-htmlpage = "%s\n%s\n%s" % (headV, js2darr, tailV)
+htmlpage = generate_map_html_page(js2darr)
 
+
+print("-I-: html write")
 # display in qtconsole - not working though
 # src http://stackoverflow.com/a/35760941
 from IPython.core.display import display, HTML
 display(HTML(htmlpage))
-# Write out 
-f=open('__results__.html','w')
-f.write(headV)
-f.write(js2darr)
-f.write(tailV)
-f.close()
+def write_html_files(htmlpage):
+  # Write out 
+  f=open('__results__.html','w')
+  f.write(htmlpage)
+  f.close()
 
-# Write out 
-f=open('output.html','w')
-f.write(headV)
-f.write(js2darr)
-f.write(tailV)
-f.close()
+  # Write out 
+  f=open('output.html','w')
+  f.write(htmlpage)
+  f.close()
+write_html_files(htmlpage)
 
 print("-I-: DEVELOPMENT - End of working File")
 
