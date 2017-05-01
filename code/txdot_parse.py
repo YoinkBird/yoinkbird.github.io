@@ -50,11 +50,13 @@ def preprocess_data(datafile, source='txdot', verbose=0):
     # todo: plot by year, then by time.
     data['crash_time_dec'] = data.crash_datetime.apply(time_base10)
     featdef = add_feature(featdef, 'crash_time_dec', {'type':'float','regtype':'continuous'})
+    featdef.set_value('crash_time_dec', 'origin', 'crash_datetime')
     # todo: figure out how to hist() with grouping by year, then group by time within each year
     # data.crash_time_dec.hist(bins=48)
     # if(showplt): 
     #   plt.show()
-    # data['crash_time_30m'] = data.crash_datetime.apply(time_round30min)
+    data['crash_time_30m'] = data.crash_datetime.apply(time_round30min)
+    featdef = add_feature(featdef, 'crash_time_30m', {'type':'int','regtype':'categorical','origin':'crash_datetime'})
     # </crash_time>
     # convert to 'nan'
     if(1):
@@ -114,6 +116,7 @@ def preprocess_data(datafile, source='txdot', verbose=0):
         # track new feature
         featattr = dict(featdef.ix[bin_category[0]])
         featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat','target':featattr['target']})
+        featdef.set_value(bin_category[1], 'origin', bin_category[0])
 
         # Explanation: 'Day of Week' is often thought of as "work week" + "weekend"
         # 1. combine Mo-Th for week, and Fr-Sun for weekend
@@ -146,6 +149,7 @@ def preprocess_data(datafile, source='txdot', verbose=0):
         bin_category = (category, "bin_%s" % category)
         featattr = dict(featdef.ix[bin_category[0]])
         featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat','target':featattr['target']})
+        featdef.set_value(bin_category[1], 'origin', bin_category[0])
 
         # Explanation: 'Light Condition' can be reduce to "good visibility", "bad visibility"
         # ['dark_lighted', 'dark_not_lighted', 'dusk', 'dark_unknown_lighting', 'dawn',];['unknown',];['daylight']
@@ -168,6 +172,7 @@ def preprocess_data(datafile, source='txdot', verbose=0):
         bin_category = (category, "bin_%s" % category)
         featattr = dict(featdef.ix[bin_category[0]])
         featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat','target':featattr['target']})
+        featdef.set_value(bin_category[1], 'origin', bin_category[0])
 
         # Explanation: Manner of Collision - direction of Units involved
         # motorist fault likelihood higher for "non changing" situations, e.g. if going straight
@@ -199,6 +204,7 @@ def preprocess_data(datafile, source='txdot', verbose=0):
         # track new feature
         featattr = dict(featdef.ix[bin_category[0]])
         featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat','target':featattr['target']})
+        featdef.set_value(bin_category[1], 'origin', bin_category[0])
 
     return(data,featdef)
 print("-I-: End of Pre-Processing")
