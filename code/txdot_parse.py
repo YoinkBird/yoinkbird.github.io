@@ -207,11 +207,14 @@ def preprocess_data(datafile, source='txdot', verbose=0):
         featdef.set_value(bin_category[1], 'origin', bin_category[0])
 
     return(data,featdef)
-print("-I-: End of Pre-Processing")
 
 # run for testing purposes
 if(__name__ == '__main__'):
+    print("-I-: Self-Test: txdot_parse.py")
+    print("-I-: should not see this from an import!")
     (data,featdef) = preprocess_data(datafile, verbose=1)
+    print("-I-: End of Pre-Processing")
+    print("-I-: Brief data exploration")
 
     print(data.head())
     print(data.info())
