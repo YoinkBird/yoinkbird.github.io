@@ -12,14 +12,16 @@ import pprint as pp
 import re
 #import xgboost as xgb
 
-# import the "crash" data
-datafile = "../data/txdot_2010_2017.csv"
+if(__name__ == '__main__'):
+    # import the "crash" data
+    datafile = "../data/txdot_2010_2017.csv"
 
-def preprocess_data(datafile, source='txdot'):
+def preprocess_data(datafile, source='txdot', verbose=0):
     data = pd.read_csv(datafile,header=7)
     # feature definitions and properties
     featdef = get_feature_defs()
-    print(list(data.columns))
+    if(verbose):
+        print(list(data.columns))
 
     # try something interesting - track the "categories" of columns
     colgrps = {
@@ -71,8 +73,9 @@ def preprocess_data(datafile, source='txdot'):
         # DOC: rename col http://stackoverflow.com/a/11346337
         data.rename(columns={'surface_condition':'surface_wet'})
         # print number of unique entries
-        for colname in data.columns:
-            print("% 4d : %s" % (len(data[colname].unique()), colname))
+        if(verbose):
+            for colname in data.columns:
+                print("% 4d : %s" % (len(data[colname].unique()), colname))
         # remove data which is has no importance
         # better to drop cols with all NaN and convert "unimportant" data to NaN
         #  - can't universally decide to drop col just based on uniqueness
@@ -200,43 +203,104 @@ def preprocess_data(datafile, source='txdot'):
     return(data,featdef)
 print("-I-: End of Pre-Processing")
 
-(data,featdef) = preprocess_data(datafile)
+# run for testing purposes
+if(__name__ == '__main__'):
+    (data,featdef) = preprocess_data(datafile, verbose=1)
+
+    print(data.head())
+    print(data.info())
+    if(1):
+      data.describe()
+      data.hist()
+      data.corr().plot() # TODO: seaborn
+      plt.show()
+    else:
+      print("-I-: Skipping...")
+
+    # alternative visualisation
+    datapt = data.pivot_table(values=['crash_death_count','crash_incapacitating_injury_count','crash_non-incapacitating_injury_count'], index=['speed_limit','crash_time'])
+    print(datapt)
 
 
-print(data.head())
-print(data.info())
-if(1):
-  data.describe()
-  data.hist()
-  data.corr().plot() # TODO: seaborn
-  plt.show()
-else:
-  print("-I-: Skipping...")
+    # inspect features with high covariance
+    pairplot_bin_var_list = list(featdef[featdef['pairplot']].index)
+    if(0):
+        sns.pairplot(data, vars=pairplot_var_list)
+        plt.show()
 
-# alternative visualisation
-datapt = data.pivot_table(values=['crash_death_count','crash_incapacitating_injury_count','crash_non-incapacitating_injury_count'], index=['speed_limit','crash_time'])
-print(datapt)
+    # list of vars which become dummie'd
+    dummies_needed_list = list(featdef[featdef.dummies == 1].index)
+
+    # dummies
+    # http://stackoverflow.com/a/36285489 - use of columns
+    data_dummies = pd.get_dummies(data, columns=dummies_needed_list)
+    # no longer need to convert headers, already done in process_data_punctuation
+    pp.pprint(list(data_dummies))
+
+    print("-I-: train-test split")
+
+    # pca stub
+    # pca = decomposition.PCA(svd_solver='full')
+    # pca.fit(pd.get_dummies(data[dummies_needed_list])).transform(pd.get_dummies(data[dummies_needed_list]))
+
+    # predictors  = list(featdef[(featdef.regtype == 'bin_cat') & (featdef.target != True)].index)
+    # responsecls = list(featdef[(featdef.regtype == 'bin_cat') & (featdef.target == True)].index)
+    predictors = [
+    # 'crash_time',
+    # 'crash_time_dec',
+     'bin_intersection_related',
+     'bin_light_condition',
+     'bin_manner_of_collision',
+     ]
+    responsecls = [
+     'bin_crash_severity'
+     ]
+    testsize = 0.3
+    data_nonan = data[ predictors + responsecls ].dropna()
+    X_train, X_test, y_train, y_test = model_selection.train_test_split(data_nonan[predictors],data_nonan[responsecls], test_size=testsize)
+
+    from sklearn import tree
+    clf = tree.DecisionTreeClassifier() #max_depth = 5)
+    clf.fit(X_train,y_train)
+
+    # prediction and scoring
+    print("-I-: cross_val_score on train (itself)")
+    print(model_selection.cross_val_score(clf, X_train, y_train.values.ravel()))
+    y_pred = clf.predict_proba(X_test)
+    print("-I-: cross_val_score against test")
+    print(model_selection.cross_val_score(clf, X_test, y_test.values.ravel()))
+
+    # DOC: How to interpret decision trees' graph results and find most informative features?
+    # src: http://stackoverflow.com/a/34872454
+    print("-I-: most important features:")
+    for i in np.argsort(clf.feature_importances_)[::-1]:
+      print("%f : %s" % (clf.feature_importances_[i],predictors[i]))
+
+    # display tree criteria
+    # src: http://scikit-learn.org/stable/modules/tree.html#classification
+    from IPython.display import Image
+    # pydot plus had to be installed as python -m pip
+    # src : http://stackoverflow.com/a/42469100
+    import pydotplus
+    dot_data = tree.export_graphviz(clf, out_file=None,
+            feature_names=predictors,
+            class_names=['0']+responsecls, # seems to require at least two class names
+            rounded=True,
+            filled=True,
+            # proportion = True,  : bool, optional (default=False) When set to True, change the display of ‘values’ and/or ‘samples’ to be proportions and percentages respectively.
+
+            )
+    graph = pydotplus.graph_from_dot_data(dot_data)
+    Image(graph.create_png() , retina=True)
+    print("-I-: if img doesn't show, run \n Image(pydotplus.graph_from_dot_data(dot_data).create_png() , retina=True)")
+    print("-I-: End of File")
 
 
-# inspect features with high covariance
-pairplot_bin_var_list = list(featdef[featdef['pairplot']].index)
-if(0):
-    sns.pairplot(data, vars=pairplot_var_list)
-    plt.show()
 
-# list of vars which become dummie'd
-dummies_needed_list = list(featdef[featdef.dummies == 1].index)
-
-# dummies
-# http://stackoverflow.com/a/36285489 - use of columns
-data_dummies = pd.get_dummies(data, columns=dummies_needed_list)
-# no longer need to convert headers, already done in process_data_punctuation
-pp.pprint(list(data_dummies))
-
-# pca stub
-# pca = decomposition.PCA(svd_solver='full')
-# pca.fit(pd.get_dummies(data[dummies_needed_list])).transform(pd.get_dummies(data[dummies_needed_list]))
-
+# miscellaneous
+'''
+# look into dictvectorizer dv.get_feature_names http://stackoverflow.com/a/34194521
+'''
 '''
 pandas tricks
 filtering
@@ -252,61 +316,6 @@ data[(data['intersection_related'] == 'Non Intersection') & data['intersecting_s
 
 data[(data['intersection_related'] == 'Non Intersection') & data['intersecting_street_name'].isnull()][colgrps['intersection']]
 '''
-
-print("-I-: train-test split")
-
-# predictors  = list(featdef[(featdef.regtype == 'bin_cat') & (featdef.target != True)].index)
-# responsecls = list(featdef[(featdef.regtype == 'bin_cat') & (featdef.target == True)].index)
-predictors = [
-# 'crash_time',
-# 'crash_time_dec',
- 'bin_intersection_related',
- 'bin_light_condition',
- 'bin_manner_of_collision',
- ]
-responsecls = [
- 'bin_crash_severity'
- ]
-testsize = 0.3
-data_nonan = data[ predictors + responsecls ].dropna()
-X_train, X_test, y_train, y_test = model_selection.train_test_split(data_nonan[predictors],data_nonan[responsecls], test_size=testsize)
-
-from sklearn import tree
-clf = tree.DecisionTreeClassifier() #max_depth = 5)
-clf.fit(X_train,y_train)
-
-# prediction and scoring
-print("-I-: cross_val_score on train (itself)")
-print(model_selection.cross_val_score(clf, X_train, y_train.values.ravel()))
-y_pred = clf.predict_proba(X_test)
-print("-I-: cross_val_score against test")
-print(model_selection.cross_val_score(clf, X_test, y_test.values.ravel()))
-
-# DOC: How to interpret decision trees' graph results and find most informative features?
-# src: http://stackoverflow.com/a/34872454
-print("-I-: most important features:")
-for i in np.argsort(clf.feature_importances_)[::-1]:
-  print("%f : %s" % (clf.feature_importances_[i],predictors[i]))
-
-# display tree criteria
-# src: http://scikit-learn.org/stable/modules/tree.html#classification
-from IPython.display import Image
-# pydot plus had to be installed as python -m pip
-# src : http://stackoverflow.com/a/42469100
-import pydotplus
-dot_data = tree.export_graphviz(clf, out_file=None,
-        feature_names=predictors,
-        class_names=['0']+responsecls, # seems to require at least two class names
-        rounded=True,
-        filled=True,
-        # proportion = True,  : bool, optional (default=False) When set to True, change the display of ‘values’ and/or ‘samples’ to be proportions and percentages respectively.
-
-        )
-graph = pydotplus.graph_from_dot_data(dot_data)
-Image(graph.create_png() , retina=True)
-print("-I-: if img doesn't show, run \n Image(pydotplus.graph_from_dot_data(dot_data).create_png()) , retina=True)")
-print("-I-: End of File")
-
 
 # random
 '''
