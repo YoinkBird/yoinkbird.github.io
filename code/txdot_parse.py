@@ -29,6 +29,14 @@ colgrps = {
 def process_cols(df):
   return df.columns.str.replace('[,\s()]+','_').str.lower()
 data.columns = process_cols(data)
+regexpunct = '[,\s()-]+'
+def process_data_punctuation(df):
+    for category in list(featdef[featdef.type == 'str'].index):
+       df[category] = df[category].str.replace(regexpunct,'_').str.lower()
+    for category in list(featdef[featdef.type == 'street'].index):
+       df[category] = df[category].str.replace(regexpunct,'_')
+    return df
+data = process_data_punctuation(data)
 # special cases
 data.columns = data.columns.str.replace('crash_i_d', 'crash_id')
 # </crash_time>

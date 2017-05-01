@@ -6,6 +6,7 @@ import pandas as pd
 def get_feature_defs():
     # data.dropna().info()
     # note: crash_time is marked categorical because by default it is encoded as HH:mm and therefore not continuous
+    # note: 'street' is same as 'str' but doesn't get lowercased. use 'name' for string which needs to be untouched
     feature_definitions = {
     'crash_id'                                 : {'type' : 'int',  'dummies':0, 'regtype' : 'categorical'  },
     'average_daily_traffic_amount'             : {'type' : 'int',  'dummies':0, 'regtype' : 'continuous'   },
@@ -20,8 +21,6 @@ def get_feature_defs():
     'crash_time'                               : {'type' : 'HH:mm','dummies':0, 'regtype' : 'categorical'   },
     'light_condition'                          : {'type' : 'str',  'dummies':1, 'regtype' : 'categorical'  },
     'day_of_week'                              : {'type' : 'str',  'dummies':1, 'regtype' : 'categorical'  },
-    'intersecting_street_name'                 : {'type' : 'str',  'dummies':0, 'regtype' : 'categorical'  },
-    'intersection_related'                     : {'type' : 'str',  'dummies':1, 'regtype' : 'categorical'  },
     'latitude'                                 : {'type' : 'gps',  'dummies':0, 'regtype' : 'continuous'   },
     'longitude'                                : {'type' : 'gps',  'dummies':0, 'regtype' : 'continuous'   },
     'manner_of_collision'                      : {'type' : 'str',  'dummies':1, 'regtype' : 'categorical'  },
@@ -29,9 +28,11 @@ def get_feature_defs():
     'object_struck'                            : {'type' : 'str',  'dummies':0, 'regtype' : 'categorical'  },
     'road_base_type'                           : {'type' : 'str',  'dummies':1, 'regtype' : 'categorical'  },
     'speed_limit'                              : {'type' : 'int',  'dummies':0, 'regtype' : 'continuous'   },
-    'street_name'                              : {'type' : 'str',  'dummies':0, 'regtype' : 'categorical'  },
-    'surface_condition'                        : {'type' : 'int',  'dummies':0, 'regtype' : 'categorical'  },
-    'weather_condition'                        : {'type' : 'str',  'dummies':0, 'regtype' : 'categorical'  },
+    'street_name'                              : {'type' : 'street',  'dummies':0, 'regtype' : 'categorical'  },
+    'intersecting_street_name'                 : {'type' : 'street',  'dummies':0, 'regtype' : 'categorical'  },
+    'intersection_related'                     : {'type' : 'str',  'dummies':1, 'regtype' : 'categorical' , },
+    'surface_condition'                        : {'type' : 'int',  'dummies':0, 'regtype' : 'categorical' , },
+    'weather_condition'                        : {'type' : 'str',  'dummies':0, 'regtype' : 'categorical' , },
     }
     #'bin_crash_severity'                       : {'type' : 'float', 'dummies':0, 'regtype' : 'continuous'   },
     #'bin_intersection_related'                 : {'type' : 'float', 'dummies':0,   },
