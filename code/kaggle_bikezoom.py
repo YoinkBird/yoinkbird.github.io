@@ -39,6 +39,13 @@ def df_as_js2d_arr_str(df, limit_for_testing=-1):
   jsrows += "];\n"
   return jsrows
 
+def get_map_df(data, featdef):
+  mapdf = data[list(featdef[featdef.jsmap == True].index) + ['bin_crash_severity']].dropna()
+  # add title attribute (i.e. column)
+  mapdf['title'] = pd.Series(index=featdef.index,dtype=str).replace(np.nan,False)
+  return mapdf
+
+
 # insert js into html templates
 def generate_map_html_page(js2darr):
   # Creating an HTML HEADER FILE
@@ -163,29 +170,27 @@ def write_html_files(htmlpage):
 
 # run for testing purposes
 if(__name__ == '__main__'):
+  verbose = 1
+  if(verbose):
+    print("-I-: testing kaggle bikezoom")
   # Read data 
   # import the "crash" data
   datafile = "../data/txdot_2010_2017.csv"
 
   (data,featdef) = preprocess_data(datafile)
 
-  verbose = 1
-  if(verbose):
-    print("-I-: testing kaggle bikezoom")
-  mapdf = data[list(featdef[featdef.jsmap == True].index) + ['bin_crash_severity']].dropna()
-  # add title attribute (i.e. column)
-  mapdf['title'] = pd.Series(index=featdef.index,dtype=str).replace(np.nan,False)
+  # generate map dataframe
+  mapdf = get_map_df(data,featdef)
   if(verbose):
     print("-I-: created mapdf")
 
-  # generate rows
+  # generate javascript rows
   if(verbose):
     print("-I-: generate javascript rows")
   quicktest = 0
   if(quicktest):  # generate limited array, print results
     limit_for_testing=6
     jsrows = df_as_js2d_arr_str(mapdf, limit_for_testing)
-    jsrows = df_as_js2d_arr_str(mapdf)
     print("-I-: javascript rows")
     print(jsrows)
     print("-I-: javascript 2d arr")
@@ -196,13 +201,16 @@ if(__name__ == '__main__'):
     js2darr = 'var crashes =' + df_as_js2d_arr_str(mapdf)
     print("-I-: ...done")
 
+  # generate, write the html
   print("-I-: html gen")
   htmlpage = generate_map_html_page(js2darr)
   print("-I-: html write")
+  write_html_files(htmlpage)
   # display in qtconsole - not working though
   # src http://stackoverflow.com/a/35760941
   from IPython.core.display import display, HTML
   display(HTML(htmlpage))
-  write_html_files(htmlpage)
   print("-I-: DEVELOPMENT - current working progress")
-  print("-I-: DEVELOPMENT - End of working File")
+
+print("-I-: DEVELOPMENT - End of working File")
+
