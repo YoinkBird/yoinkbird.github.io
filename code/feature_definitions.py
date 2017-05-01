@@ -8,31 +8,31 @@ def get_feature_defs():
     # note: crash_time is marked categorical because by default it is encoded as HH:mm and therefore not continuous
     # note: 'street' is same as 'str' but doesn't get lowercased. use 'name' for string which needs to be untouched
     feature_definitions = {
-    'crash_id'                                 : {'type' : 'int',  'dummies':0, 'regtype' : 'categorical' , 'pairplot':0,  },
-    'average_daily_traffic_amount'             : {'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0,  },
-    'average_daily_traffic_year'               : {'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0,  },
-    'crash_death_count'                        : {'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':1, },
-    'crash_incapacitating_injury_count'        : {'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0, },
-    'crash_non-incapacitating_injury_count'    : {'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0, },
-    'crash_not_injured_count'                  : {'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0, },
-    'crash_possible_injury_count'              : {'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0, },
-    'crash_severity'                           : {'type' : 'str',  'dummies':1, 'regtype' : 'categorical' , 'pairplot':0,  },
-    'crash_year'                               : {'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':1,  },
-    'crash_time'                               : {'type' : 'HH:mm','dummies':0, 'regtype' : 'categorical' , 'pairplot':0,   },
-    'light_condition'                          : {'type' : 'str',  'dummies':1, 'regtype' : 'categorical' , 'pairplot':0,  },
-    'day_of_week'                              : {'type' : 'str',  'dummies':1, 'regtype' : 'categorical' , 'pairplot':0,  },
-    'latitude'                                 : {'type' : 'gps',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0,  },
-    'longitude'                                : {'type' : 'gps',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0,  },
-    'manner_of_collision'                      : {'type' : 'str',  'dummies':1, 'regtype' : 'categorical' , 'pairplot':0,  },
-    'medical_advisory_flag'                    : {'type' : 'str',  'dummies':0, 'regtype' : 'categorical' , 'pairplot':0,  },
-    'object_struck'                            : {'type' : 'str',  'dummies':0, 'regtype' : 'categorical' , 'pairplot':0,  },
-    'road_base_type'                           : {'type' : 'str',  'dummies':1, 'regtype' : 'categorical' , 'pairplot':0,  },
-    'speed_limit'                              : {'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':1,  },
-    'street_name'                              : {'type' : 'street',  'dummies':0, 'regtype' : 'categorical' , 'pairplot':0,  },
-    'intersecting_street_name'                 : {'type' : 'street',  'dummies':0, 'regtype' : 'categorical' , 'pairplot':0,  },
-    'intersection_related'                     : {'type' : 'str',  'dummies':1, 'regtype' : 'categorical' , 'pairplot':0,  },
-    'surface_condition'                        : {'type' : 'int',  'dummies':0, 'regtype' : 'categorical' , 'pairplot':0,  },
-    'weather_condition'                        : {'type' : 'str',  'dummies':0, 'regtype' : 'categorical' , 'pairplot':0,  },
+    'crash_id'                                 : {'target':0, 'type' : 'int',  'dummies':0, 'regtype' : 'categorical' , 'pairplot':0,  },
+    'average_daily_traffic_amount'             : {'target':0, 'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0,  },
+    'average_daily_traffic_year'               : {'target':0, 'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0,  },
+    'crash_death_count'                        : {'target':1, 'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':1, },
+    'crash_incapacitating_injury_count'        : {'target':1, 'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0, },
+    'crash_non-incapacitating_injury_count'    : {'target':1, 'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0, },
+    'crash_not_injured_count'                  : {'target':1, 'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0, },
+    'crash_possible_injury_count'              : {'target':1, 'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0, },
+    'crash_severity'                           : {'target':1, 'type' : 'str',  'dummies':1, 'regtype' : 'categorical' , 'pairplot':0,  },
+    'crash_year'                               : {'target':0, 'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':1,  },
+    'crash_time'                               : {'target':0, 'type' : 'HH:mm','dummies':0, 'regtype' : 'categorical' , 'pairplot':0,   },
+    'light_condition'                          : {'target':0, 'type' : 'str',  'dummies':1, 'regtype' : 'categorical' , 'pairplot':0,  },
+    'day_of_week'                              : {'target':0, 'type' : 'str',  'dummies':1, 'regtype' : 'categorical' , 'pairplot':0,  },
+    'latitude'                                 : {'target':0, 'type' : 'gps',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0,  },
+    'longitude'                                : {'target':0, 'type' : 'gps',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':0,  },
+    'manner_of_collision'                      : {'target':0, 'type' : 'str',  'dummies':1, 'regtype' : 'categorical' , 'pairplot':0,  },
+    'medical_advisory_flag'                    : {'target':1, 'type' : 'str',  'dummies':0, 'regtype' : 'categorical' , 'pairplot':0,  },
+    'object_struck'                            : {'target':0, 'type' : 'str',  'dummies':0, 'regtype' : 'categorical' , 'pairplot':0,  },
+    'road_base_type'                           : {'target':0, 'type' : 'str',  'dummies':1, 'regtype' : 'categorical' , 'pairplot':0,  },
+    'speed_limit'                              : {'target':0, 'type' : 'int',  'dummies':0, 'regtype' : 'continuous'  , 'pairplot':1,  },
+    'street_name'                              : {'target':0, 'type' : 'street',  'dummies':0, 'regtype' : 'categorical' , 'pairplot':0,  },
+    'intersecting_street_name'                 : {'target':0, 'type' : 'street',  'dummies':0, 'regtype' : 'categorical' , 'pairplot':0,  },
+    'intersection_related'                     : {'target':0, 'type' : 'str',  'dummies':1, 'regtype' : 'categorical' , 'pairplot':0,  },
+    'surface_condition'                        : {'target':0, 'type' : 'int',  'dummies':0, 'regtype' : 'categorical' , 'pairplot':0,  },
+    'weather_condition'                        : {'target':0, 'type' : 'str',  'dummies':0, 'regtype' : 'categorical' , 'pairplot':0,  },
     }
     #'bin_crash_severity'                       : {'type' : 'float', 'dummies':0, 'regtype' : 'continuous'   },
     #'bin_intersection_related'                 : {'type' : 'float', 'dummies':0,   },
@@ -45,6 +45,9 @@ def get_feature_defs():
     featdef['dummies'].replace(1,True, inplace=True)
     featdef.pairplot.replace(0,False, inplace=True)
     featdef.pairplot.replace(1,True, inplace=True)
+    for attr in ['target']:
+        featdef[attr].replace(0, False, inplace=True)
+        featdef[attr].replace(1, True, inplace=True)
     # add attribute for <...>
     ## attname = '...'
     ## df[attname] = pd.Series(index=featdef.index,dtype=bool).replace(True,False)
@@ -62,6 +65,9 @@ def add_feature(df, featname, featdict):
         featdict['regtype'] = 'categorical'
     if('pairplot' not in featdict):
         featdict['pairplot'] = False
+    for attr in ['target']:
+        if(attr not in featdict):
+            featdict[attr] = False
 
     # special defaults
     if('type' in featdict):

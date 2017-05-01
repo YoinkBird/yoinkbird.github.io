@@ -107,7 +107,8 @@ if(1):
     data[bin_category[1]].replace(['incapacitating_injury','killed'], 0, inplace=True)
     data[bin_category[1]].replace(['unknown'], np.nan, inplace=True)
     # track new feature
-    featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat'})
+    featattr = dict(featdef.ix[bin_category[0]])
+    featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat','target':featattr['target']})
 
     # Explanation: 'Day of Week' is often thought of as "work week" + "weekend"
     # 1. combine Mo-Th for week, and Fr-Sun for weekend
@@ -138,7 +139,8 @@ if(1):
     data[bin_category].replace(bin_znan, np.nan, inplace=True)
     # track new feature
     bin_category = (category, "bin_%s" % category)
-    featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat'})
+    featattr = dict(featdef.ix[bin_category[0]])
+    featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat','target':featattr['target']})
 
     # Explanation: 'Light Condition' can be reduce to "good visibility", "bad visibility"
     # ['dark_lighted', 'dark_not_lighted', 'dusk', 'dark_unknown_lighting', 'dawn',];['unknown',];['daylight']
@@ -159,7 +161,8 @@ if(1):
     data[bin_category].replace(binznan, np.nan, inplace=True)
     # track new feature
     bin_category = (category, "bin_%s" % category)
-    featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat'})
+    featattr = dict(featdef.ix[bin_category[0]])
+    featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat','target':featattr['target']})
 
     # Explanation: Manner of Collision - direction of Units involved
     # motorist fault likelihood higher for "non changing" situations, e.g. if going straight
@@ -189,7 +192,8 @@ if(1):
     data[bin_category[1]].replace(bin_false, 0, inplace=True)
     data[bin_category[1]].replace(bin_znan, np.nan, inplace=True)
     # track new feature
-    featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat'})
+    featattr = dict(featdef.ix[bin_category[0]])
+    featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat','target':featattr['target']})
 
     
 
@@ -243,8 +247,12 @@ data[(data['intersection_related'] == 'Non Intersection') & data['intersecting_s
 
 data[(data['intersection_related'] == 'Non Intersection') & data['intersecting_street_name'].isnull()][colgrps['intersection']]
 '''
+print("-I-: End of Pre-Processing")
 
 print("-I-: train-test split")
+
+# predictors  = list(featdef[(featdef.regtype == 'bin_cat') & (featdef.target != True)].index)
+# responsecls = list(featdef[(featdef.regtype == 'bin_cat') & (featdef.target == True)].index)
 predictors = [
 # 'crash_time',
 # 'crash_time_dec',
