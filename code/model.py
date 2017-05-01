@@ -104,6 +104,34 @@ print("-I-: most important features:")
 for i in np.argsort(clf.feature_importances_)[::-1]:
   print("%f : %s" % (clf.feature_importances_[i],predictors[i]))
 
+# plotting important features
+for i in np.argsort(clf.feature_importances_)[::-1]:
+  feat = predictors[i]
+  feat = predictors[i].replace('bin_','')
+  pltkind = 'pie'
+  if(featdef.ix[feat].origin):
+      feat_orig = featdef.ix[predictors[i]].origin
+      data[feat].value_counts().plot(kind=pltkind, title="%s - original values for %s" % (feat_orig, feat))
+  else:
+      data[feat].value_counts().plot(kind=pltkind, title="%s " % (feat))
+  plt.show()
+
+print("time of day:")
+timelbl = sorted(data.crash_time_30m.unique())
+ax_time = plt.subplot(111)
+#ax_time.set_xticks(range(0,24))
+time_hrs = range(0,2400,200)
+timelbl = []
+for i in time_hrs:
+    timelbl.append("%02d:%02d" % (i//100,i%100))
+ax_time.set_xticks(time_hrs)
+ax_time.set_xticklabels(timelbl, rotation=45, rotation_mode="anchor",ha="right")
+ax_time.set_title("crash time rounded to 30 min")
+data.crash_time.hist(bins=48,ax=ax_time)
+plt.show()
+# data.crash_time_30m.value_counts(sort=False).plot(kind='pie');plt.show()
+# /plotting important features
+
 # display tree criteria
 # src: http://scikit-learn.org/stable/modules/tree.html#classification
 from IPython.display import Image
