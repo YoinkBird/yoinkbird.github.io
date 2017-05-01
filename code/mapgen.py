@@ -117,6 +117,7 @@ def generate_map_html_page(js2darr):
   <!--
   original source: https://www.kaggle.com/mchirico/d/nhtsa/2015-traffic-fatalities/bike-zoom-chicago-map/code
   heatmap  source: https://www.kaggle.com/mchirico/d/nhtsa/2015-traffic-fatalities/google-heatmap-of-bike-fatalities/code
+  cluster  source: https://www.kaggle.com/mchirico/d/nhtsa/2015-traffic-fatalities/exploding-google-map-school-bus/code
   -->
 """
 # </headV>
@@ -246,8 +247,14 @@ def generate_map_html_page(js2darr):
             zIndex: crash[3]
             });
           posMarkers[i] = marker; // track the markers
-          }
         }
+        // MarkerClusterer - https://googlemaps.github.io/js-marker-clusterer/docs/examples.html
+        // intentionally disabling the images (//imagePath: ..) for a cleaner look when combined with the gradients
+        // <!-- # TODO: layers - http://stackoverflow.com/questions/25867804/markercluster-toggle-on-off -->
+        var markerCluster = new MarkerClusterer(map, posMarkers, {
+          //imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+        });
+    }
     // http://stackoverflow.com/a/11270368
     function toggleMarkers(map) {
       for (var index in crashes){
@@ -262,13 +269,14 @@ def generate_map_html_page(js2darr):
 
 
     </script>
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
 
-            <!--
-            key="AIzaSyALU94pLkit5lx_QU62wnzOsO6y1H_BWfI"
-            src="https://maps.googleapis.com/maps/api/js?key="+key+"&callback=initMap"></script>
-            -->
-        <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALU94pLkit5lx_QU62wnzOsO6y1H_BWfI&libraries=visualization&callback=initMap"></script>
+    <!--
+    key="AIzaSyALU94pLkit5lx_QU62wnzOsO6y1H_BWfI"
+    src="https://maps.googleapis.com/maps/api/js?key="+key+"&callback=initMap"></script>
+    -->
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALU94pLkit5lx_QU62wnzOsO6y1H_BWfI&libraries=visualization&callback=initMap"></script>
 
   </body>
 </html>
