@@ -34,8 +34,10 @@ data.columns = data.columns.str.replace('crash_i_d', 'crash_id')
 # </crash_time>
 # convert integer crashtime to datetime with year
 data['crash_datetime'] = create_datetime_series(data)
+featdef = add_feature(featdef, 'crash_datetime', {'type':'datetime','regtype':'categorical'})
 # todo: plot by year, then by time.
 data['crash_time_dec'] = data.crash_datetime.apply(time_base10)
+featdef = add_feature(featdef, 'crash_time_dec', {'type':'float','regtype':'continuous'})
 # todo: figure out how to hist() with grouping by year, then group by time within each year
 # data.crash_time_dec.hist(bins=48)
 # if(showplt): 
@@ -96,6 +98,8 @@ if(1):
     data[bin_category[1]].replace(['non_incapacitating_injury','possible_injury','not_injured'], 1, inplace=True)
     data[bin_category[1]].replace(['incapacitating_injury','killed'], 0, inplace=True)
     data[bin_category[1]].replace(['unknown'], np.nan, inplace=True)
+    # track new feature
+    featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat'})
 
     # Explanation: 'Day of Week' is often thought of as "work week" + "weekend"
     # 1. combine Mo-Th for week, and Fr-Sun for weekend
@@ -113,6 +117,7 @@ if(1):
     # ['intersection_related', 'intersection',];['non_intersection', 'driveway_access',];['not_reported']
     # categorisation
     bin_category = 'bin_intersection_related'
+    category = 'intersection_related'
     # 1 :
     bin_true = ['intersection_related', 'intersection',]
     # 0 :
@@ -123,12 +128,16 @@ if(1):
     data[bin_category].replace(bin_true,  1, inplace=True)
     data[bin_category].replace(bin_false, 0, inplace=True)
     data[bin_category].replace(bin_znan, np.nan, inplace=True)
+    # track new feature
+    bin_category = (category, "bin_%s" % category)
+    featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat'})
 
     # Explanation: 'Light Condition' can be reduce to "good visibility", "bad visibility"
     # ['dark_lighted', 'dark_not_lighted', 'dusk', 'dark_unknown_lighting', 'dawn',];['unknown',];['daylight']
     # categorisation
     # 0 :
     bin_category = 'bin_light_condition'
+    category = 'light_condition'
     binfalse = ['dark_lighted', 'dark_not_lighted', 'dusk', 'dark_unknown_lighting', 'dawn',]
     #   note: this hides the effects of good lighting at night, but the definition of 'dark, not lighted' is not clear, 
     #   and it would require more investigation to determine which cyclists have adequate lighting
@@ -140,6 +149,9 @@ if(1):
     data[bin_category].replace(bintrue,  1, inplace=True)
     data[bin_category].replace(binfalse, 0, inplace=True)
     data[bin_category].replace(binznan, np.nan, inplace=True)
+    # track new feature
+    bin_category = (category, "bin_%s" % category)
+    featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat'})
 
     # Explanation: Manner of Collision - direction of Units involved
     # motorist fault likelihood higher for "non changing" situations, e.g. if going straight
@@ -168,6 +180,8 @@ if(1):
     data[bin_category[1]].replace(bin_true,  1, inplace=True)
     data[bin_category[1]].replace(bin_false, 0, inplace=True)
     data[bin_category[1]].replace(bin_znan, np.nan, inplace=True)
+    # track new feature
+    featdef = add_feature(featdef, bin_category[1], {'type':'int','regtype':'bin_cat'})
 
     
 
