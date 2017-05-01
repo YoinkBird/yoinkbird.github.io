@@ -75,6 +75,9 @@ def generate_map_html_page(js2darr):
       }
     </style>
   </head>
+  <!--
+  original source: https://www.kaggle.com/mchirico/d/nhtsa/2015-traffic-fatalities/bike-zoom-chicago-map/code
+  -->
   <body> 
       
 
@@ -182,7 +185,7 @@ def write_html_files(htmlpage, filename='output.html'):
 if(__name__ == '__main__'):
   verbose = 1
   if(verbose):
-    print("-I-: testing kaggle bikezoom")
+    print("-I-: testing map generation")
   # Read data 
   # import the "crash" data
   datafile = "../data/txdot_2010_2017.csv"
