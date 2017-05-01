@@ -45,6 +45,15 @@ def get_map_df(data, featdef):
   mapdf['title'] = pd.Series(index=featdef.index,dtype=str).replace(np.nan,False)
   return mapdf
 
+def get_html_map_from_df(data, featdef):
+  mapdf = get_map_df(data,featdef)
+  js2darr = 'var crashes =' + df_as_js2d_arr_str(mapdf)
+  if(verbose):
+    print("-I-: ...done")
+  print("-I-: html gen")
+  htmlpage = generate_map_html_page(js2darr)
+  write_html_files(htmlpage)
+  return htmlpage
 
 # insert js into html templates
 def generate_map_html_page(js2darr):
@@ -156,14 +165,15 @@ def generate_map_html_page(js2darr):
   return htmlpage
 
 
-def write_html_files(htmlpage):
+def write_html_files(htmlpage, filename='output.html'):
   # Write out 
+  # not sure if __results__ is special
   f=open('__results__.html','w')
   f.write(htmlpage)
   f.close()
 
   # Write out 
-  f=open('output.html','w')
+  f=open(filename,'w')
   f.write(htmlpage)
   f.close()
 
@@ -178,38 +188,47 @@ if(__name__ == '__main__'):
   datafile = "../data/txdot_2010_2017.csv"
 
   (data,featdef) = preprocess_data(datafile)
+  # consolidated function
+  get_html_map_from_df(data,featdef)
+  print("-I-: DEVELOPMENT - current effort")
 
-  # generate map dataframe
-  mapdf = get_map_df(data,featdef)
-  if(verbose):
-    print("-I-: created mapdf")
 
-  # generate javascript rows
-  if(verbose):
-    print("-I-: generate javascript rows")
-  quicktest = 0
-  if(quicktest):  # generate limited array, print results
-    limit_for_testing=6
-    jsrows = df_as_js2d_arr_str(mapdf, limit_for_testing)
-    print("-I-: javascript rows")
-    print(jsrows)
-    print("-I-: javascript 2d arr")
-    js2darr = 'var crashes =' + df_as_js2d_arr_str(mapdf)
-    print(js2darr)
-  else: # generate full array, don't print results (i.e. don't fill up screen)
-    print("-I-: javascript 2d arr")
-    js2darr = 'var crashes =' + df_as_js2d_arr_str(mapdf)
-    print("-I-: ...done")
+  # manual testing of each function
+  if(0):
+    print("-I-: ##############################")
+    print("-I-: testing each function manually")
+    # generate map dataframe
+    mapdf = get_map_df(data,featdef)
+    if(verbose):
+      print("-I-: created mapdf")
 
-  # generate, write the html
-  print("-I-: html gen")
-  htmlpage = generate_map_html_page(js2darr)
-  print("-I-: html write")
-  write_html_files(htmlpage)
-  # display in qtconsole - not working though
-  # src http://stackoverflow.com/a/35760941
-  from IPython.core.display import display, HTML
-  display(HTML(htmlpage))
+    # generate javascript rows
+    if(verbose):
+      print("-I-: generate javascript rows")
+    quicktest = 0
+    if(quicktest):  # generate limited array, print results
+      limit_for_testing=6
+      jsrows = df_as_js2d_arr_str(mapdf, limit_for_testing)
+      print("-I-: javascript rows")
+      print(jsrows)
+      print("-I-: javascript 2d arr")
+      js2darr = 'var crashes =' + df_as_js2d_arr_str(mapdf)
+      print(js2darr)
+    else: # generate full array, don't print results (i.e. don't fill up screen)
+      print("-I-: javascript 2d arr")
+      js2darr = 'var crashes =' + df_as_js2d_arr_str(mapdf)
+      print("-I-: ...done")
+
+    # generate, write the html
+    print("-I-: html gen")
+    htmlpage = generate_map_html_page(js2darr)
+    print("-I-: html write")
+    # name 'from_fns' indicates that each function was called individually to create this file
+    write_html_files(htmlpage, 'output_from_fns.html')
+    # display in qtconsole - not working though
+    # src http://stackoverflow.com/a/35760941
+    from IPython.core.display import display, HTML
+    display(HTML(htmlpage))
   print("-I-: DEVELOPMENT - current working progress")
 
 print("-I-: DEVELOPMENT - End of working File")
