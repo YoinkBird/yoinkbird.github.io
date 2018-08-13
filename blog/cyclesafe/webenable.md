@@ -1,0 +1,68 @@
+# Goal
+Get cyclesafe and cyclesafe_server onto a hosted provider
+
+Quick Start (Sloppy setup, but here goes):
+
+git clone https://github.com/yoinkbird/cyclesafe
+cd cyclesafe
+git clone https://github.com/yoinkbird/cyclesafe_server server
+cd server
+./setup.sh
+
+This should launch chromium-browser in incognito mode with a few tabs.
+
+# deploying to web
+Currently, app has many hacks to make it work locally.
+
+For web deployment, security hacks and the like need to be removed.
+
+In server code, start a branch:
+git checkout -b enable_hosted
+
+First, ensure that all pages accessible via local url, e.g. localhost:port/page
+This means updating server code to serve non-json files as well.
+
+Second, ensure that all pages accessible from remote host, e.g. using a VPN
+
+Third, convert to proper framework to reduce security risk. 
+Also find a way to audit the javascript.
+
+## First
+Start accessing file from "localhost:<port>/file.html" instead of "<path>/file.html"
+
+Worklog:
+Server not configured to return pages, always returns json
+=> implement "proper" rest endpoint, i.e. use URL to determine whether to return rest
+
+## Second
+
+Only guaranteed way to test is to host, either locally on another machine/VM or on the web.
+
+Of course, a web expert would know exactly which hacks to remove, but even then they would either be grepping for a list of bad practices or just onion-peeling.
+
+Therefore, setting up an 'lubuntu' virtual machine from which to access the site.
+
+If I ain't done it before, it's new to me!
+
+update:
+accessed from within the VM (easier than setting up all of the dependencies!)
+
+Had forgot that firefox doesn't like the hacky blocking XMLHttpRequest; still need to implement promises for that double request!
+ - - -
+Synchronous XMLHttpRequest on the main thread is deprecated because of its detrimental effects to the end user's experience. For more help http://xhr.spec.whatwg.org/
+
+NetworkError: A network error occurred
+[ httpPostSyncAndGetSync ]
+ - - -
+
+Workaround: use chromium-browser
+sudo apt install chromium-browser
+
+Problem: hard-coded 'localhost', need to workaround this again!
+
+Fixed by using window location.
+
+## Third
+Convert to proper framework to reduce security risks and bugs
+
+http://blog.luisrei.com/articles/flaskrest.html
