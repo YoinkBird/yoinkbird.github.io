@@ -2,7 +2,7 @@
 
 Why yoinkbird? It was a fun meme a while ago, seemed unique enough (at the time), and I like birbs.
 
-[yoinkbird.github.io](yoinkbird.github.io)
+[yoinkbird.github.io](https://yoinkbird.github.io)
 
 # Projects
 
