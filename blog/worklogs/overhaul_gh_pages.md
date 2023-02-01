@@ -1,9 +1,9 @@
 # Overhaul of the GitHub Pages Website
 
 Goals:
-* theme
-* jekyll
-* domain
+* [x] theme
+* [x] jekyll
+* [x] domain
 
 # theme
 
@@ -40,9 +40,9 @@ Quick investigation into how pages are deployed, in order to understand how jeky
 
 <pre>
 Your site was last deployed to the <a href="/YoinkBird/yoinkbird.github.io/deployments?environment=github-pages#activity-log">github-pages</a> environment by
-    the <span><a href="/YoinkBird/yoinkbird.github.io/actions/runs/4057742858">pages build and deployment</a></span> workflow.
-      <p><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-with-a-custom-github-actions-workflow">Learn more about deploying to GitHub Pages using custom workflows</a>
-<pre/>
+    the <a href="/YoinkBird/yoinkbird.github.io/actions/runs/4057742858">pages build and deployment</a> workflow.
+      <p><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-with-a-custom-github-actions-workflow">Learn more about deploying to GitHub Pages using custom workflows</a></p>
+</pre>
 
 Of course:
 
@@ -103,6 +103,16 @@ which github then redirects to: https://github.com/envygeeks/jekyll-docker/blob/
 
 => Conclusion: Since jekyll redirects to this third party, we'll trust it.
 
+
+## initial command
+
+Adapted from https://github.com/envygeeks/jekyll-docker#usage:
+```bash
+$ JEKYLL_VERSION=3.8 sh -c 'docker run --rm --volume="$PWD:/srv/jekyll:Z" -it jekyll/jekyll:$JEKYLL_VERSION jekyll build'
+```
+
+
+Running as a sub-process `<VAR>=<VAL> sh -c '<command>'` to avoid having to set a var in the current shell.
 
 ## issue: It looks lik you don't have jekyll-remote-theme or one of its dependencies installed
 
@@ -237,3 +247,41 @@ See an `index.html`, probably created from the `README.md`
 
 * read the jekyll docs to verify that this is expected behaviour
 * investigate the auto-regeneration
+
+
+
+## Auto-Regneration with --watch
+
+
+```
+$ JEKYLL_VERSION=3.8 sh -c 'docker run --rm --volume="$PWD:/srv/jekyll:Z" -it jekyll/jekyll:$JEKYLL_VERSION jekyll build --watch'
+...
+   GitHub Metadata: No GitHub API authentication could be found. Some fields may be missing or have incorrect data.
+                    done in 0.859 seconds.
+ Auto-regeneration: enabled for '/srv/jekyll'
+      Regenerating: 1 file(s) changed at 2023-01-31 19:42:12
+                    blog/worklogs/overhaul_gh_pages.md
+      Remote Theme: Using theme pages-themes/slate
+                    ...done in 0.129607848 seconds.
+```
+
+
+=> note the auto-regenration of this page as it is being updated
+
+
+Reading docs shows https://github.com/envygeeks/jekyll-docker#server
+
+
+```bash
+$ JEKYLL_VERSION=3.8 sh -c 'docker run --rm --volume="$PWD:/srv/jekyll:Z" --publish [::1]:4000:4000 jekyll/jekyll:$JEKYLL_VERSION jekyll serve'
+...
+
+```
+
+
+TODO: enable caching as per https://github.com/envygeeks/jekyll-docker#caching
+
+# Domain
+
+
+For now, simply redirecting yoinkbird.com to [yoinkbird.github.io](https://yoinkbird.github.io)
