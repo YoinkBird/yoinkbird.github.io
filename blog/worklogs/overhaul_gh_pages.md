@@ -1,4 +1,4 @@
-# Overhaul of the GitHub Pages Website
+# Worklog: Overhaul of the GitHub Pages Website - 2023-02-01
 
 Goals:
 * [x] theme

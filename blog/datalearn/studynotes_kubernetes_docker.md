@@ -1,7 +1,14 @@
+# Worklog: Explore PipelineAI and Kubernetes - 2018-08-19
 
-# https://github.com/PipelineAI/pipeline/tree/master/docs/quickstart/kubernetes
+Learn PipelineAI and Kubernetes
 
-# https://github.com/PipelineAI/pipeline/blob/master/docs/quickstart/README.md#install-pipelinecli
+# PipelineAI
+
+https://github.com/PipelineAI/pipeline/tree/master/docs/quickstart/kubernetes
+
+## Install Pipeline AI CLI
+
+https://github.com/PipelineAI/pipeline/blob/master/docs/quickstart/README.md#install-pipelinecli
 
 $ pip install cli-pipeline==1.5.200 --default-timeout=120 --ignore-installed --no-cache --upgrade
 
