@@ -2,14 +2,38 @@
     {%- assign page_paths = site.header_pages | default: default_paths -%}
     {%- assign titles_size = site.pages | map: 'title' | join: '' | size -%}
 
+    {%- comment -%}Sort of an Associative Array, using one for keys and another with kv "string pairs"{%- endcomment -%}
+    {%- comment -%}store categories{%- endcomment -%}
+    {%- assign cats = "" | split: "," -%}
+    {%- comment -%}store categories,links{%- endcomment -%}
+    {%- assign catlinks = "" | split: "|" -%}
     {%- if titles_size > 0 -%}
-    <p>Other Articles (uncategorized)</p>
-      <ul>
       {%- for path in page_paths | sort -%}
         {%- assign my_page = site.pages | where: "path", path | first -%}
         {%- if my_page.title -%}
-        <li><a href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a></li>
+          {%- assign path_elems = my_page.url | relative_url | split: "/" -%}
+          {%- assign cat = path_elems[-2] -%}
+          {%- assign curcat = cat | split: "," -%}
+          {%- assign rurl = my_page.url | relative_url -%}
+          {%- capture href -%}<a href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>{%- endcapture -%}
+          {%- capture entry -%}{{cat}},{{href}}{%- endcapture -%}
+          {%- assign entries = entry | split: "|" -%}
+          {%- assign catlinks = catlinks | concat: entries -%}
+          {%- assign cats = cats | concat: curcat | uniq -%}
         {%- endif -%}
       {%- endfor -%}
-      </ul>
     {%- endif -%}
+
+    <p>Other Articles</p>
+    {%- for cat in cats -%}
+      <ul><li>{{cat | upcase }}</li>
+          <ul>
+      {%- for entrystr in catlinks -%}
+        {%- assign entry = entrystr | split: "," -%}
+        {%- if entry[0] == cat -%}
+            <li>{{ entry[1] }}</li>
+        {%- endif -%}
+      {%- endfor -%}
+          </ul>
+      </ul>
+    {%- endfor -%}
