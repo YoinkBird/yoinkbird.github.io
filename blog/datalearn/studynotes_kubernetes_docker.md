@@ -1,4 +1,4 @@
-# Worklog: Explore PipelineAI and Kubernetes - 2018-08-19
+# Worklog - 2018-08-19: Explore PipelineAI and Kubernetes
 
 Learn PipelineAI and Kubernetes
 
