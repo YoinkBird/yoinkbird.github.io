@@ -1,4 +1,4 @@
-# Worklog: Learn Jekyll Templating - 2023-02-02
+# Worklog - 2023-02-02: Learn Jekyll Templating
 
 ## Prerequisite
 
