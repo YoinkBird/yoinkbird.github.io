@@ -25,3 +25,7 @@ Topics: Interesting problems solved, "beyond the manual" writeups on common oper
 
 * development writeups:
   * [writups for cyclesafe project](https://github.com/YoinkBird/cyclesafe/tree/main/docs/articles)
+
+<p>
+{%- include site_pages.html -%}
+</p>

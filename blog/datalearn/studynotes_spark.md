@@ -1,3 +1,4 @@
+# Worklog: Explore Apache Spark - 2018-08-19
 # Apache Spark
 ## Download
 https://spark.apache.org/downloads.html
