@@ -265,8 +265,13 @@ $ JEKYLL_VERSION=3.8 sh -c 'docker run --rm --volume="$PWD:/srv/jekyll:Z" -it je
                     ...done in 0.129607848 seconds.
 ```
 
+Explore:
 
-=> note the auto-regenration of this page as it is being updated
+```bash
+firefox --private-window localhost:4000/
+```
+
+=> note the auto-regeneration of this page as it is being updated
 
 
 Reading docs shows https://github.com/envygeeks/jekyll-docker#server
@@ -278,8 +283,11 @@ $ JEKYLL_VERSION=3.8 sh -c 'docker run --rm --volume="$PWD:/srv/jekyll:Z" --publ
 
 ```
 
+## Caching
 
-TODO: enable caching as per https://github.com/envygeeks/jekyll-docker#caching
+First, create a [Makefile](/Makefile) to manage these steps.
+
+Then, add volume creation for dependency caching as per https://github.com/envygeeks/jekyll-docker#caching
 
 ## Gemfile.lock
 
