@@ -5,10 +5,13 @@
     {%- comment -%}Sort of an Associative Array, using one for keys and another with kv "string pairs"{%- endcomment -%}
     {%- comment -%}store categories{%- endcomment -%}
     {%- assign cats = "" | split: "," -%}
-    {%- comment -%}store categories,links{%- endcomment -%}
+    {%- comment -%}store titles{%- endcomment -%}
+    {%- assign titles = "" | split: "," -%}
+    {%- comment -%}store titles,categories,links{%- endcomment -%}
     {%- assign catlinks = "" | split: "|" -%}
     {%- if titles_size > 0 -%}
-      {%- for path in page_paths | sort -%}
+      {%- for path in page_paths -%}
+      PATH: {{ path }}<br/>
         {%- assign my_page = site.pages | where: "path", path | first -%}
         {%- if my_page.title -%}
           {%- assign path_elems = my_page.url | relative_url | split: "/" -%}
@@ -16,7 +19,7 @@
           {%- assign curcat = cat | split: "," -%}
           {%- assign rurl = my_page.url | relative_url -%}
           {%- capture href -%}<a href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>{%- endcapture -%}
-          {%- capture entry -%}{{cat}},{{href}}{%- endcapture -%}
+          {%- capture entry -%}{{my_page.title}},{{cat}},{{href}}{%- endcapture -%}
           {%- assign entries = entry | split: "|" -%}
           {%- assign catlinks = catlinks | concat: entries -%}
           {%- assign cats = cats | concat: curcat | uniq -%}
@@ -24,14 +27,31 @@
       {%- endfor -%}
     {%- endif -%}
 
+    {%- assign dates = "2018-08-19, 2023-01-31, 2023-01-30, 2023-02-01, 2023-02-02" | split: ", " -%}
+    {% assign dates = "20180819, 20230131, 20230130, 20230201, 20230202" | split: ", " %}
+    dates: {{ dates | sort | join "," }}<br/>
+    {%- for entrystr in dates | sort | reverse -%}
+    date: {{ entrystr }}<br/>
+    {%- endfor -%}
+    {%- assign dates = "Worklog - 2018-08-19, Worklog - 2023-01-31, Worklog - 2023-01-30, Worklog - 2023-02-01, Worklog - 2023-02-02" | split: ", " -%}
+    dates: {{ dates | sort | join "," }}<br/>
+    {%- for entrystr in dates | sort | reverse -%}
+    date: {{ entrystr }}<br/>
+    {%- endfor -%}
+    catlinks: {{ catlinks | sort | join "][" }}<br/>
+    <p>
+    {%- for entrystr in catlinks | sort -%}
+    entrystr: {{ entrystr }}<br/>
+    {%- endfor -%}
+    </p>
     <p>Other Articles</p>
     {%- for cat in cats -%}
       <ul><li>{{cat | upcase }}</li>
           <ul>
-      {%- for entrystr in catlinks -%}
+      {%- for entrystr in catlinks | sort -%}
         {%- assign entry = entrystr | split: "," -%}
-        {%- if entry[0] == cat -%}
-            <li>{{ entry[1] }}</li>
+        {%- if entry[1] == cat -%}
+            <li>{{ entry[2] }}</li>
         {%- endif -%}
       {%- endfor -%}
           </ul>
