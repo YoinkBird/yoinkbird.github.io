@@ -27,9 +27,8 @@ Show pages, grouped by their immediate parent-dir; this means that pages at the 
       {%- endfor -%}
     {%- endif -%}
 
-    <p>Other Articles</p>
     {%- for cat in cats -%}
-      <ul><li>{{cat | upcase }}</li>
+      <ul><li>{{cat }}</li>
           <ul>
       {%- for entrystr in catlinks -%}
         {%- assign entry = entrystr | split: "," -%}
