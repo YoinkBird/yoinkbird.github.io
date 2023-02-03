@@ -2,6 +2,8 @@
     {%- assign page_paths = site.header_pages | default: default_paths -%}
     {%- assign titles_size = site.pages | map: 'title' | join: '' | size -%}
 
+    {%- comment -%}store dates{%- endcomment -%}
+    {%- assign dates = "" | split: "," -%}
     {%- comment -%}Sort of an Associative Array, using one for keys and another with kv "string pairs"{%- endcomment -%}
     {%- comment -%}store categories{%- endcomment -%}
     {%- assign cats = "" | split: "," -%}
@@ -11,7 +13,6 @@
     {%- assign catlinks = "" | split: "|" -%}
     {%- if titles_size > 0 -%}
       {%- for path in page_paths -%}
-      PATH: {{ path }}<br/>
         {%- assign my_page = site.pages | where: "path", path | first -%}
         {%- if my_page.title -%}
           {%- assign path_elems = my_page.url | relative_url | split: "/" -%}
@@ -19,7 +20,11 @@
           {%- assign curcat = cat | split: "," -%}
           {%- assign rurl = my_page.url | relative_url -%}
           {%- capture href -%}<a href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>{%- endcapture -%}
-          {%- capture entry -%}{{my_page.title}},{{cat}},{{href}}{%- endcapture -%}
+          {%- assign title_elems = my_page.title | split: ":" -%}
+          {%- capture date -%}{{ title_elems[0] | replace: "Worklog - " "" | replace: "-" "_"}}{%- endcapture -%}
+          {%- assign curdate = date | split: "," -%} 
+          {%- assign dates = dates | concat: curdate -%}
+          {%- capture entry -%}{{date}},{{cat}},{{href}}{%- endcapture -%}
           {%- assign entries = entry | split: "|" -%}
           {%- assign catlinks = catlinks | concat: entries -%}
           {%- assign cats = cats | concat: curcat | uniq -%}
@@ -27,18 +32,11 @@
       {%- endfor -%}
     {%- endif -%}
 
-    {%- assign dates = "2018-08-19, 2023-01-31, 2023-01-30, 2023-02-01, 2023-02-02" | split: ", " -%}
-    {% assign dates = "20180819, 20230131, 20230130, 20230201, 20230202" | split: ", " %}
-    dates: {{ dates | sort | join "," }}<br/>
-    {%- for entrystr in dates | sort | reverse -%}
-    date: {{ entrystr }}<br/>
+    <p>
+    {%- for date in dates | sort_natural -%}
+    date: {{ date }}<br/>
     {%- endfor -%}
-    {%- assign dates = "Worklog - 2018-08-19, Worklog - 2023-01-31, Worklog - 2023-01-30, Worklog - 2023-02-01, Worklog - 2023-02-02" | split: ", " -%}
-    dates: {{ dates | sort | join "," }}<br/>
-    {%- for entrystr in dates | sort | reverse -%}
-    date: {{ entrystr }}<br/>
-    {%- endfor -%}
-    catlinks: {{ catlinks | sort | join "][" }}<br/>
+    </p>
     <p>
     {%- for entrystr in catlinks | sort -%}
     entrystr: {{ entrystr }}<br/>
