@@ -137,4 +137,17 @@ Observation: Works
 
 Conclusion: Needed simply to have an `index.md` and add the `site pages` template to it.
 
-Next steps: fix the formatting of the include
+Next steps: fix the formatting of the include in [Jekyll+Liquid](Categorize Pages by Directory](automatic_jekyll_categories_by_dir.md)
+
+
+## Creating top-level link in header
+
+
+```bash
+mkdir -p _layouts && cd _layouts
+curl -O https://raw.githubusercontent.com/pages-themes/slate/master/_layouts/default.html
+```
+
+"merge in" the `site.title` from <https://github.com/jekyll/minima/blob/32468f51758b0b37c2b1f423265d4f29db461b27/_includes/header.html#L7>
+
+Done!
