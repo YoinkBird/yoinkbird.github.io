@@ -1,12 +1,10 @@
 # YoinkBird
 
-Why yoinkbird? It was a fun meme a while ago, seemed unique enough (at the time), and I like birbs.
-
-[yoinkbird.github.io](https://yoinkbird.github.io)
+Why yoinkbird? It was a fun meme a while ago, the TLD was available, and I like birbs. Branding Exercise: Success!
 
 # Projects
 
-github: [https://github.com/YoinkBird](https://github.com/YoinkBird)
+GitHub <img alt="[github octocat icon]" src="https://github.githubassets.com/images/icons/emoji/octocat.png" style="height: 1em"/>: [https://github.com/YoinkBird](https://github.com/YoinkBird)
 
 ## Cycle Safe
 
@@ -23,8 +21,10 @@ Loose collection of writeups; currently very sparse while consolidating varioius
 
 Topics: Interesting problems solved, "beyond the manual" writeups on common operations.
 
-* development writeups:
+* development writeups
   * [writups for cyclesafe project](https://github.com/YoinkBird/cyclesafe/tree/main/docs/articles)
+* cryptography
+  * [2016 Overview of Signal's Double Ratchet Protocol](https://docs.google.com/presentation/d/1eFA30SYdO8n_z-23Hu9MWHld5KMuIn4BJfDjjl2shSs)
 
 <p>
 {%- include site_pages.html -%}
