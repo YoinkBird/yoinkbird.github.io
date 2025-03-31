@@ -8,7 +8,8 @@ GitHub <img alt="[github octocat icon]" src="https://github.githubassets.com/ima
 
 ## Cycle Safe
 
-* [https://github.com/YoinkBird/cyclesafe_server](https://github.com/YoinkBird/cyclesafe_server)
+Cycle Safe is a navigation system that recommends safer cycling routes by evaluating the risk of routes suggested by Google Maps.
+* [https://github.com/YoinkBird/cyclesafe](https://github.com/YoinkBird/cyclesafe)
 
 <!--
 * static heatmap of pedalcyclist-involved crashes, ca 2017 https://yoinkbird.github.io/crashes.html
