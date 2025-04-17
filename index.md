@@ -1,4 +1,4 @@
-# YoinkBird
+# Yoink Birbman, Automator
 
 Why yoinkbird? It was a fun meme a while ago, the TLD was available, and I like birbs. Branding Exercise: Success!
 
