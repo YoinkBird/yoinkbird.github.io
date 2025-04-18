@@ -6,3 +6,11 @@ source "https://rubygems.org"
 # TODO: update jekyll, build explicitly without relying on default GH github-pages plugin
 # https://jekyllrb.com/docs/installation/other-linux/
 # gem 'jekyll', '~> 4.4', '>= 4.4.1'
+
+# Diagrams, etc:
+# Nope - too clunky
+# gem "jekyll-mermaid"
+
+# TODO
+# https://github.com/jeffreytse/jekyll-spaceship?tab=readme-ov-file#installation
+# gem 'jekyll-spaceship', group: :jekyll_plugins
