@@ -42,7 +42,7 @@ serve: volume browse ## deliberately not running detached in order to make it cl
 		--publish '127.0.0.1:${port}:${port}' --publish '127.0.0.1:35729:35729' --name ${container_name} \
 		 jekyll/jekyll:${JEKYLL_VERSION}  \
 		jekyll serve \
-		--config _config.yml \
+		--config _config.yml,_config_dev.yml \
 		--livereload --incremental --watch
 
 clean:
