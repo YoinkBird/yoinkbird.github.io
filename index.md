@@ -22,11 +22,16 @@ Loose collection of writeups; currently very sparse while consolidating varioius
 
 Topics: Interesting problems solved, "beyond the manual" writeups on common operations.
 
-* development writeups
+* Development Writeups
   * [writups for cyclesafe project](https://github.com/YoinkBird/cyclesafe/tree/main/docs/articles)
-* cryptography
+* Cryptography
   * [2016 Overview of Signal's Double Ratchet Protocol](https://docs.google.com/presentation/d/1eFA30SYdO8n_z-23Hu9MWHld5KMuIn4BJfDjjl2shSs)
 
-<p>
+
+<!-- Required Workaruond to render the html correctly
+however, don't wrap the ul in a <p>...</p>
+src: https://html.spec.whatwg.org/multipage/grouping-content.html#the-p-element
+via: https://stackoverflow.com/a/7168757
+-->
+<p></p>
 {%- include site_pages.html -%}
-</p>

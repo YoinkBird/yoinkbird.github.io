@@ -1,3 +1,4 @@
+<p></p>
 {%- comment -%}
 Show pages, grouped by their immediate parent-dir; this means that pages at the root level won't be shown
 {%- endcomment -%}
@@ -28,14 +29,38 @@ Show pages, grouped by their immediate parent-dir; this means that pages at the 
     {%- endif -%}
 
     {%- for cat in cats -%}
-      <ul><li>{{cat }}</li>
-          <ul>
-      {%- for entrystr in catlinks -%}
-        {%- assign entry = entrystr | split: "," -%}
-        {%- if entry[0] == cat -%}
+      {%- comment -%}
+      # <!-- CamelCase https://stackoverflow.com/a/64039434 -->
+      {%- endcomment -%}
+      {%- assign input = cat -%}
+      {%- assign parts = input | replace: '_', ' ' | replace: '-',' '  | split: ' ' -%}
+      {%- capture camel -%}
+          {%- for part in parts -%}
+              {%- if forloop.index == 1 -%}
+                  {{ part }}
+              {%- else -%}
+                  {{ part | capitalize }}
+              {%- endif -%}
+          {%- endfor -%}
+      {%- endcapture -%}
+      {%- comment -%}
+      # <!-- TitleCase https://stackoverflow.com/a/37732856 -->
+      {%- endcomment -%}
+      {%- assign words = cat | replace: "_"," " | replace: "-"," " | split: " " -%}
+      {%- capture titlecase -%}
+        {% for word in words %}
+          {{ word | capitalize }}
+        {%-endfor %}
+      {%- endcapture -%}
+      <ul>
+        <li>{{ titlecase }}</li>
+        <ul>
+        {%- for entrystr in catlinks -%}
+          {%- assign entry = entrystr | split: "," -%}
+          {%- if entry[0] == cat %}
             <li>{{ entry[1] }}</li>
-        {%- endif -%}
-      {%- endfor -%}
-          </ul>
-      </ul>
+          {%- endif -%}
+        {%- endfor -%}
+        </ul>
+       </ul>
     {%- endfor -%}
