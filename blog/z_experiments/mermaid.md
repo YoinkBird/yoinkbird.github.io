@@ -1,5 +1,7 @@
 # Mermaid JS Integration
 
+{% include mermaid.html %}
+
 ```mermaid
 %% # https://knowyourmeme.com/memes/profit
 flowchart TB

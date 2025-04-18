@@ -1,0 +1,11 @@
+  <!-- 
+    mermaid: https://stackoverflow.com/a/79314539
+    include mermaid: https://stackoverflow.com/a/78821653
+    jekyll include syntax: https://jekyllrb.com/docs/includes/
+  -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({startOnLoad:true,theme:'neutral'})
+    await mermaid.run({querySelector:'code.language-mermaid'})
+  </script>
+
