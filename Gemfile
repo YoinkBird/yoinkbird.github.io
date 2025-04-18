@@ -1,3 +1,11 @@
 source "https://rubygems.org"
 
+# Reference:
+#  https://askubuntu.com/questions/259832/determine-which-version-of-a-gem-is-installed
+#  bundle info jekyll
+# TODO: update jekyll, build explicitly without relying on default GH github-pages plugin
+# https://jekyllrb.com/docs/installation/other-linux/
+# gem 'jekyll', '~> 4.4', '>= 4.4.1'
+# Requires Old Jekyll:
 gem "github-pages", group: :jekyll_plugins
+# gem "github-pages", '~> 232', group: :jekyll_plugins

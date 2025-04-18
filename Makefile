@@ -1,5 +1,19 @@
 # See: https://github.com/jekyll/docker/tree/master/README.md
 JEKYLL_VERSION=3.8 
+# TODO: update Jekyll version, for details see the 'Gemfile'
+# https://hub.docker.com/r/jekyll/jekyll/tags
+# Last pushed about 3 years by
+# Caveat: The github plugin 'github-pages' requires an _ancient_ jekyll version, so this container version doesn't really matter
+# Default:
+# JEKYLL_VERSION=4.2.2
+# bash-5.1# jekyll --version
+# ruby 3.1.1p18 (2022-02-18 revision 53f5fc4236) [x86_64-linux-musl]
+# jekyll 4.2.2
+# After 'jekyll build' (or 'bundle update')
+# bash-5.0# jekyll --version
+# ruby 2.6.3p62 (2019-04-16 revision 67580) [x86_64-linux-musl]
+# jekyll 3.9.2
+
 # https://github.com/envygeeks/jekyll-docker/blob/master/README.md#caching
 volume_name=jekyll_ruby_gems
 container_name=jekyll_serve_ybcom
