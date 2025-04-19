@@ -29,6 +29,10 @@ Show pages, grouped by their immediate parent-dir; this means that pages at the 
 {%- endif -%}
 
 {%- for cat in cats -%}
+  {%- if cat == "slugs" -%}
+    <!-- DEBUG: skipping ... -->
+    {%- continue -%}
+  {%- endif -%}
   {%- comment -%}
   # <!-- CamelCase https://stackoverflow.com/a/64039434 -->
   {%- endcomment -%}
