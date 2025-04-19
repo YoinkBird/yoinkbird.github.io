@@ -1,4 +1,5 @@
 <p></p>
+{%- comment -%} TODO: upgrade jekyll, ditch github # https://shopify.github.io/liquid/tags/template/#liquid {%- endcomment -%}
 {%- comment -%}
 Show pages, grouped by their immediate parent-dir; this means that pages at the root level won't be shown
 {%- endcomment -%}
@@ -26,6 +27,8 @@ Show pages, grouped by their immediate parent-dir; this means that pages at the 
       {%- assign cats = cats | concat: curcat | uniq -%}
     {%- endif -%}
   {%- endfor -%}
+  {%- comment -%} # sort the list {%- endcomment -%}
+  {%- assign cats = cats | sort -%}
 {%- endif -%}
 
 {%- for cat in cats -%}
