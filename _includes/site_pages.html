@@ -53,7 +53,7 @@ Show pages, grouped by their immediate parent-dir; this means that pages at the 
     {%-endfor %}
   {%- endcapture -%}
   <ul>
-    <li>{{ titlecase }}</li>
+    <li>{{ titlecase | split: " " | join: " "}}</li>
     <ul>
     {%- for entrystr in catlinks -%}
       {%- assign entry = entrystr | split: "," -%}
