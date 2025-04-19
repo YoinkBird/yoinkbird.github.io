@@ -2,65 +2,65 @@
 {%- comment -%}
 Show pages, grouped by their immediate parent-dir; this means that pages at the root level won't be shown
 {%- endcomment -%}
-    {%- assign default_paths = site.pages | map: "path" -%}
-    {%- assign page_paths = site.header_pages | default: default_paths -%}
-    {%- assign titles_size = site.pages | map: 'title' | join: '' | size -%}
+{%- assign default_paths = site.pages | map: "path" -%}
+{%- assign page_paths = site.header_pages | default: default_paths -%}
+{%- assign titles_size = site.pages | map: 'title' | join: '' | size -%}
 
-    {%- comment -%}Sort of an Associative Array, using one for keys and another with kv "string pairs"{%- endcomment -%}
-    {%- comment -%}store categories{%- endcomment -%}
-    {%- assign cats = "" | split: "," -%}
-    {%- comment -%}store categories,links{%- endcomment -%}
-    {%- assign catlinks = "" | split: "|" -%}
-    {%- if titles_size > 0 -%}
-      {%- for path in page_paths | sort -%}
-        {%- assign my_page = site.pages | where: "path", path | first -%}
-        {%- if my_page.title -%}
-          {%- assign path_elems = my_page.url | relative_url | split: "/" -%}
-          {%- assign cat = path_elems[-2] -%}
-          {%- assign curcat = cat | split: "," -%}
-          {%- assign rurl = my_page.url | relative_url -%}
-          {%- capture href -%}<a href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>{%- endcapture -%}
-          {%- capture entry -%}{{cat}},{{href}}{%- endcapture -%}
-          {%- assign entries = entry | split: "|" -%}
-          {%- assign catlinks = catlinks | concat: entries -%}
-          {%- assign cats = cats | concat: curcat | uniq -%}
-        {%- endif -%}
-      {%- endfor -%}
+{%- comment -%}Sort of an Associative Array, using one for keys and another with kv "string pairs"{%- endcomment -%}
+{%- comment -%}store categories{%- endcomment -%}
+{%- assign cats = "" | split: "," -%}
+{%- comment -%}store categories,links{%- endcomment -%}
+{%- assign catlinks = "" | split: "|" -%}
+{%- if titles_size > 0 -%}
+  {%- for path in page_paths | sort -%}
+    {%- assign my_page = site.pages | where: "path", path | first -%}
+    {%- if my_page.title -%}
+      {%- assign path_elems = my_page.url | relative_url | split: "/" -%}
+      {%- assign cat = path_elems[-2] -%}
+      {%- assign curcat = cat | split: "," -%}
+      {%- assign rurl = my_page.url | relative_url -%}
+      {%- capture href -%}<a href="{{ my_page.url | relative_url }}">{{ my_page.title | escape }}</a>{%- endcapture -%}
+      {%- capture entry -%}{{cat}},{{href}}{%- endcapture -%}
+      {%- assign entries = entry | split: "|" -%}
+      {%- assign catlinks = catlinks | concat: entries -%}
+      {%- assign cats = cats | concat: curcat | uniq -%}
     {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
 
-    {%- for cat in cats -%}
-      {%- comment -%}
-      # <!-- CamelCase https://stackoverflow.com/a/64039434 -->
-      {%- endcomment -%}
-      {%- assign input = cat -%}
-      {%- assign parts = input | replace: '_', ' ' | replace: '-',' '  | split: ' ' -%}
-      {%- capture camel -%}
-          {%- for part in parts -%}
-              {%- if forloop.index == 1 -%}
-                  {{ part }}
-              {%- else -%}
-                  {{ part | capitalize }}
-              {%- endif -%}
-          {%- endfor -%}
-      {%- endcapture -%}
-      {%- comment -%}
-      # <!-- TitleCase https://stackoverflow.com/a/37732856 -->
-      {%- endcomment -%}
-      {%- assign words = cat | replace: "_"," " | replace: "-"," " | split: " " -%}
-      {%- capture titlecase -%}
-        {% for word in words %}
-          {{ word | capitalize }}
-        {%-endfor %}
-      {%- endcapture -%}
-      <ul>
-        <li>{{ titlecase }}</li>
-        <ul>
-        {%- for entrystr in catlinks -%}
-          {%- assign entry = entrystr | split: "," -%}
-          {%- if entry[0] == cat %}
-            <li>{{ entry[1] }}</li>
+{%- for cat in cats -%}
+  {%- comment -%}
+  # <!-- CamelCase https://stackoverflow.com/a/64039434 -->
+  {%- endcomment -%}
+  {%- assign input = cat -%}
+  {%- assign parts = input | replace: '_', ' ' | replace: '-',' '  | split: ' ' -%}
+  {%- capture camel -%}
+      {%- for part in parts -%}
+          {%- if forloop.index == 1 -%}
+              {{ part }}
+          {%- else -%}
+              {{ part | capitalize }}
           {%- endif -%}
-        {%- endfor -%}
-        </ul>
-       </ul>
+      {%- endfor -%}
+  {%- endcapture -%}
+  {%- comment -%}
+  # <!-- TitleCase https://stackoverflow.com/a/37732856 -->
+  {%- endcomment -%}
+  {%- assign words = cat | replace: "_"," " | replace: "-"," " | split: " " -%}
+  {%- capture titlecase -%}
+    {% for word in words %}
+      {{ word | capitalize }}
+    {%-endfor %}
+  {%- endcapture -%}
+  <ul>
+    <li>{{ titlecase }}</li>
+    <ul>
+    {%- for entrystr in catlinks -%}
+      {%- assign entry = entrystr | split: "," -%}
+      {%- if entry[0] == cat %}
+        <li>{{ entry[1] }}</li>
+      {%- endif -%}
     {%- endfor -%}
+    </ul>
+   </ul>
+{%- endfor -%}

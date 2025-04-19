@@ -23,12 +23,12 @@
 
 <body>
   <!-- HEADER -->
+  <!--
   <div id="header">
-  </div><!-- end header -->
+  </div>--><!-- end header -->
 
   <!-- MAIN CONTENT -->
   <div class="wrapper">
-
     <section>
       <div id="title">
         <!--
@@ -39,27 +39,28 @@
         <p>{{ site.tagline | default: site.description | default: site.github.project_tagline }}</p>
         <hr />
       </div>
+    </section>
 
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        {{ content }}
+      </section>
+    </div>
+  </div><!-- wrapper -->
 
-      <!-- MAIN CONTENT -->
-      <div id="main_content_wrap" class="outer">
-        <section id="main_content" class="inner">
-          {{ content }}
-
-        </section>
-
-        <!-- FOOTER  -->
-        <div id="footer_wrap" class="outer">
-          <footer class="inner">
-            <hr />
-            {% if site.github.is_project_page %}
-            <p class="copyright">Website maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
-            {% endif %}
-            <span class="credits right">GitHub Pages Theme: <a
-                href="https://pages-themes.github.io/midnight/">Midnight</a> by <a
-                href="https://twitter.com/mattgraham">mattgraham</a></span>
-          </footer>
-        </div>
+  <!-- FOOTER  -->
+  <div id="footer_wrap" class="outer">
+    <footer class="inner">
+    <hr />
+    {% if site.github.is_project_page %}
+    <p class="copyright">Website maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
+    {% endif %}
+    <span class="credits right">GitHub Pages Theme: <a
+        href="https://pages-themes.github.io/midnight/">Midnight</a> by <a
+        href="https://twitter.com/mattgraham">mattgraham</a></span>
+    </footer>
+  </div>
 </body>
 
 </html>
