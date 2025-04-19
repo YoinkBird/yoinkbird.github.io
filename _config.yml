@@ -5,4 +5,8 @@ description: Automation from Bare Metal to the Cloud!
 remote_theme: pages-themes/midnight@v0.2.0
 
 plugins:
+# github allowed plugins: 
+#  https://pages.github.com/versions.json
+#  via https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/about-github-pages-and-jekyll#plugins
 - jekyll-remote-theme
+- jekyll-redirect-from # https://github.com/jekyll/jekyll-redirect-from#usage
